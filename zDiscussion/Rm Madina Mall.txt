@@ -1,0 +1,64 @@
+
+www.gmail.com
+Username:Faraz@iconictek.com
+Password::Fahad1!@#
+
+
++===================================+
+| New Account Info                  |
++===================================+
+| Domain: madinamallmn.net/cpanel or
+https://az1-tr1.supercp.com:2083/
+| Ip: 68.66.226.89 (n)
+| HasCgi: y
+| UserName: madinamallmn
+| PassWord: J,LAN?gzaXGm
+
+
+I have reviewed the video, and I have a few queries.
+
+1- This project is only based on tenant/rent offices or shops. Right? There is no way to sell the offices/shops and receive only maintenance of sold offices/shops. "The owner is renting these offices with different tenants. so this HTML mockup is not fully complete so whatever you do for enhancement please feel free to add it "
+
+2- "Area Allocated" in the tenant form should have a separate form where we can mention the details of shop/offices i.e floor number, area dimension, number of rooms etc. Let me know if you want that, or should I hard code the dropdown "Area Allocated" "all of the are ground floor but each office has a number and area dimension Please feel free to add it."
+
+3- I don't find any page/form where we can enter the status of current month payment, either it is received or partially recieved etc. so I think this needs to be created right? "Please add it this page/form"
+
+4- Currently I am seeing only the revenue module in your provided mockup. Do you want to manage any sort of expense there? "Yes, it is needed to be managed by the expenses whatever categories is"
+
+and you will provide me with this html template (if it's final), right? and when it is supposed to start.? "I'll provide you with the HTML mockup in a zip file. we need to start ASAP."
+
+Note:
+
+You raised a great question Faraz. Regarding this project, actually add any form or fields that you may think is necessary for this and keep me posted in case you have questions. it is better you sent your question via the email so we are able to track it.
+
+
+
+Area
+id, type (Shop, Office), type_detail(Front Shop, Center Shop), name, dimension, is_active
+
+Tenant
+id, first_name, last_name, phone_number, business_name, area_alloted (f*), acquiring_date, rent, maintenance, photo, is_active
+
+Rent
+id, t_id, month, pay_date, total_amount, pay_amount, status (paid, unpaid, partially_paid)
+
+Expense_Category
+id, name, is_active
+
+Expense
+id, e_id, amount, expense_date, is_active
+
+Users
+first_name, last_name, phone_number, username, email, password, user_type (Admin, cashmanager)
+
+Company
+name, street, apt,zip, state, city, phone_number, email, description, logo
+
+
+
+
+
+
+
+
+
