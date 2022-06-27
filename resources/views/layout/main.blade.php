@@ -1,5 +1,6 @@
 @include('layout.header')
 @include('layout.sidebar')
+@include('sweetalert::alert')
 
             <!-- ============================================================== -->
             <!-- Start Page Content here -->
