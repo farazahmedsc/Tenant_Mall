@@ -46,7 +46,7 @@ Expense_Category
 id, name, is_active
 
 Expense
-id, e_id, amount, expense_date, is_active
+id, e_id, amount, expense_date , description, is_active 
 
 Users
 first_name, last_name, phone_number, username, email, password, user_type (Admin, cashmanager)
