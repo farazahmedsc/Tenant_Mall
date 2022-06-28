@@ -4,15 +4,6 @@
   Area
 @endpush
 
-@push('css-link')
-<style type="text/css">
-    .my-active span{
-        background-color: #5cb85c !important;
-        color: white !important;
-        border-color: #5cb85c !important;
-    }
-</style>   
-@endpush
 
 @push('js-link')
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
@@ -98,7 +89,7 @@
                                         <tr>
                                             <td>{{$area->id}}</td>
                                             <td>
-                                                <a href="#" class="text-gray-800 text-hover-primary mb-1">{{$area->name}}</a></td>
+                                                <a href="{{route('area_edit', ['id' => $area->id ])}}" class="text-gray-800 text-hover-primary mb-1">{{$area->name}}</a></td>
                                             <td>{{$area->dimension}}</td>
                                             <td>
                                                 @php
@@ -128,25 +119,7 @@
                             </div>
                         </div>
 
-                        {{-- <ul class="pagination pagination-rounded justify-content-end my-2">
-                            <li class="page-item">
-                                <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                    <span class="visually-hidden">Previous</span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="javascript: void(0);">1</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript: void(0);">3</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-                            <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript: void(0);" aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                    <span class="visually-hidden">Next</span>
-                                </a>
-                            </li>
-                        </ul> --}}
+                        
                     </div> <!-- end card-body-->
                 </div> <!-- end card-->
             </div> <!-- end col -->

@@ -23,7 +23,8 @@ class UserController extends Controller
         $user = User::where('username' ,'=', $request->input('username'))->first();
 
         if($user){
-           if($user['password'] == $request->input('password')){               
+           if($user['password'] == $request->input('password')){   
+                       
                session()->put('user', $user);                
                 return redirect('/');
            }else{

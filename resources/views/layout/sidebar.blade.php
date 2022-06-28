@@ -65,7 +65,7 @@
                 </li>
 
                 <li>
-                    <a href="tenants-list.html">
+                    <a href="{{url('/tenant_list')}}">
                         <i data-feather="users"></i>
                         <span> Tenant </span>
                     </a>
