@@ -14,15 +14,11 @@
     <!-- App css -->
 
    
-    <link href="{{ url('/') }}/adminpanel/css/config/default/bootstrap.min.css" rel="stylesheet" type="text/css"
-        id="bs-default-stylesheet" />
-    <link href="{{ url('/') }}/adminpanel/css/config/default/app.min.css" rel="stylesheet" type="text/css"
-        id="app-default-stylesheet" />
+    <link href="{{ url('/') }}/adminpanel/css/config/default/bootstrap.min.css" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
+    <link href="{{ url('/') }}/adminpanel/css/config/default/app.min.css" rel="stylesheet" type="text/css" id="app-default-stylesheet" />
 
-    <link href="{{ url('/') }}/adminpanel/css/config/default/bootstrap-dark.min.css" rel="stylesheet" type="text/css"
-        id="bs-dark-stylesheet" />
-    <link href="{{ url('/') }}/adminpanel/css/config/default/app-dark.min.css" rel="stylesheet" type="text/css"
-        id="app-dark-stylesheet" />
+    <link href="{{ url('/') }}/adminpanel/css/config/default/bootstrap-dark.min.css" rel="stylesheet" type="text/css" id="bs-dark-stylesheet" />
+    <link href="{{ url('/') }}/adminpanel/css/config/default/app-dark.min.css" rel="stylesheet" type="text/css" id="app-dark-stylesheet" />
 
     <!-- icons -->
     <link href="{{ url('/') }}/adminpanel/css/icons.min.css" rel="stylesheet" type="text/css" />

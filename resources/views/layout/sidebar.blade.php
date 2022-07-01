@@ -87,10 +87,10 @@
                     <div class="collapse" id="sidebarExpense">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="expense-category-list.html">Category</a>
+                                <a href="{{url('/expense_category_list')}}">Category</a>
                             </li>
                             <li>
-                                <a href="expense-list.html">Expense</a>
+                                <a href="{{url('/expense_list')}}">Expense</a>
                             </li>                                        
                         </ul>
                     </div>
@@ -113,7 +113,7 @@
                 </li>
                 
                 <li>
-                    <a href="users-list.html">
+                    <a href="{{url('/user_list')}}">
                         <i data-feather="users"></i>
                         <span> Users </span>
                     </a>

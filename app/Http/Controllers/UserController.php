@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     public function authenticate(Request $request){
-        $user = User::where('username' ,'=', $request->input('username'))->first();
+        $user = User::where('username' ,'=', $request->input('username'))->orwhere('email' ,'=', $request->input('username'))->first();
 
         if($user){
            if($user['password'] == $request->input('password')){   
