@@ -56,7 +56,7 @@ Route::middleware('userAuthentication')->group(function (){
      Route::get('/expense/delete/{id}', [ExpenseController::class, 'delete'])->name('expense_delete');
 
       // Users -----
-      Route::get('/user_list', [UserController::class, 'index']);
+      Route::get('/user_list', [UserController::class, 'user_list']);
       Route::get('/user/create', [UserController::class, 'create'])->name('user_create');
       Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user_edit');
       Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user_delete');

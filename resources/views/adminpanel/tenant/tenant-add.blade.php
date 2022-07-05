@@ -121,12 +121,12 @@ Add Tenant
                             </div>
                         </div>
 
-                        <div class="row {{(!is_null($area->type)) ? '' : 'd-none';}}">
+                        <div class="row {{(!is_null($tenant->is_active)) ? '' : 'd-none';}}">
                             <div class="form-group col-md-6 mb-3">
                                 <label>Status</label>
                                 <select name="is_active" class="form-control form-select form-select-solid" >                                        
-                                    <option value="1" {{($area->is_active == 1)? 'Selected' : '';}}>Active</option>
-                                    <option value="0" {{($area->is_active == 0)? 'Selected' : '';}}>Inactive</option>
+                                    <option value="1" {{($tenant->is_active == 1)? 'Selected' : '';}}>Active</option>
+                                    <option value="0" {{($tenant->is_active == 0)? 'Selected' : '';}}>Inactive</option>
                                 </select>                                   
                             </div>
                         </div>

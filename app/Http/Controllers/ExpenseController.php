@@ -48,7 +48,7 @@ class ExpenseController extends Controller
         $expense = new Expense();
         $expense->ec_id = $request['ec_id'];
         $expense->amount = $request['amount'];
-        $expense->expense_date = $request['phone_number'];
+        $expense->expense_date = $request['expense_date'];
         $expense->description = $request['description'];
        
         $result = $expense->save();
@@ -89,10 +89,10 @@ class ExpenseController extends Controller
         $expense = Expense::find($id);
         $expense->ec_id = $request['ec_id'];
         $expense->amount = $request['amount'];
-        $expense->expense_date = $request['phone_number'];
+        $expense->expense_date = $request['expense_date'];
         $expense->description = $request['description'];
         $expense->is_active = $request['is_active'];
-        $result = $tenant->save();
+        $result = $expense->save();
 
         
         if($result){

@@ -34,7 +34,7 @@
                             
                         </ol>
                     </div>
-                    <h4 class="page-title">Add Expense</h4>
+                    <h4 class="page-title">{{$label}}</h4>
                 </div>
             </div>
         </div>     
@@ -45,20 +45,25 @@
                 <div class="card">
                     <div class="card-body">
                     
-                    <h5 class="form-section mb-3 font-24">Add Expense</h5>
+                    <h5 class="form-section mb-3 font-24">{{$label}}</h5>
+                    <form action="{{$url}}" method="post">
+                        @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
                                 <label>Cateogry <sup class="text-danger">*</sup></label>
-                                <select name="e_id" class="form-control form-select form-select-solid" required>
+                                <select name="ec_id" class="form-control form-select form-select-solid" required>
                                     <option value="">Select</option>
-                                    <option value="Shop">Food</option>
-                                    <option value="Office">Payroll</option>
+                                    @foreach ($ec as $e)
+                                        <option value="{{$e->id}}" {{($expense->ec_id == $e->id)? 'Selected' : '';}}>{{$e->name}}</option>
+                                    @endforeach
+                                    
+                                    
                                 </select>
                             </div>
 
                             <div class="form-group col-md-6 mb-3">
                                 <label>Amount <sup class="text-danger">*</sup></label>
-                                <input type="number" name="amount" class="form-control form-control-solid" required>
+                                <input type="number" name="amount" value="{{$expense->amount}}" class="form-control form-control-solid" required>
                             </div>
                                 
                         </div>
@@ -66,23 +71,32 @@
                             <div class="row">
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Expense Date <sup class="text-danger">*</sup></label>
-                                    <input type="date" name="street" class="form-control form-control-solid" required>
+                                    <input type="date" name="expense_date" class="form-control form-control-solid" value="{{$expense->expense_date}}" required>
                                 </div>
                                 <div class="form-group col-md-6 mb-3">
                                     <label>Description</label>
-                                    <input type="text" name="amount" class="form-control form-control-solid">
+                                    <input type="text" name="description" class="form-control form-control-solid" value="{{$expense->description}}">
+                                </div>                                
+                            </div>
+
+                            <div class="row {{(!is_null($expense->is_active)) ? '' : 'd-none';}}">
+                                <div class="form-group col-md-6 mb-3">
+                                    <label>Status</label>
+                                    <select name="is_active" class="form-control form-select form-select-solid" >                                        
+                                        <option value="1" {{($expense->is_active == 1)? 'Selected' : '';}}>Active</option>
+                                        <option value="0" {{($expense->is_active == 0)? 'Selected' : '';}}>Inactive</option>
+                                    </select>                                   
                                 </div>
-                                
-                                
                             </div>
 
 
                         <div class="row mt-3">
                             <div class="col-12 text-center">
-                                <button type="button" class="btn btn-success waves-effect waves-light m-1"><i class="fe-check-circle me-1"></i> Create</button>
+                                <button type="submit" class="btn btn-success waves-effect waves-light m-1"><i class="fe-check-circle me-1"></i> Submit</button>
                                 <button type="reset" class="btn btn-light waves-effect waves-light m-1"><i class="fe-x me-1"></i> Cancel</button>
                             </div>
                         </div>
+                    </form> 
 
                     </div> <!-- end card-body -->
                 </div> <!-- end card-->
