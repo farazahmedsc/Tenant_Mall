@@ -63,13 +63,13 @@ Users
                     <div class="row justify-content-between mb-2">
                         <div class="col-auto">
                             <form class="search-bar position-relative mb-sm-0 mb-2">
-                                <input type="text" class="form-control" placeholder="Search...">
+                                <input type="text" name="search" class="form-control" placeholder="Search...">
                                 <span class="mdi mdi-magnify"></span>
-                            </form>                          
+                            </form>                               
                         </div>
                         <div class="col-md-6">
                             <div class="text-md-end">
-                                <a href="users-add.html" class="btn btn-primary waves-effect waves-light mb-2 me-2"><i class="mdi mdi-basket me-1"></i> Add User</a>
+                                <a href="{{ route('user_create')}}" class="btn btn-primary waves-effect waves-light mb-2 me-2"><i class="mdi mdi-basket me-1"></i> Add User</a>
                             </div>
                         </div><!-- end col-->
                     </div>
@@ -77,130 +77,37 @@ Users
                     <div class="table-responsive">
                         <table class="table table-centered table-nowrap table-borderless table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th style="width: 20px;">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck1">
-                                            <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                        </div>
-                                    </th>
+                                <tr>      
+                                    <th>Id</th>                             
                                     <th>Full Name</th>
-                   <th>Email</th>
-                   <th>Phone</th>
-                   <th>User Name</th>
-                   <th>User Type</th>
-                   <th>Status</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>User Name</th>
+                                    <th>User Type</th>
+                                    <th>Added On</th>
+                                    <th>Status</th>
                                     <th style="width: 82px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td>
-                      Jhon Doe
-                   </td>
-                   <!--end::Customer=-->
-                   
-                   <!--begin::Billing=-->
-                   <td>
-                      abdul@gmail.com
-                   </td>
-                   <!--end::Billing=-->
-                   <!--begin::Product=-->
-                   <td>612708557</td>
-                   <!--end::Product=-->
-                   <!--begin::Date=-->
-                   <td>user29</td>
-                   <!--end::Date=-->
-                   <td>
-                      <div class="badge bg-warning">Shop Owner</div>
-                   </td>
-                   <td>
-                      <div class="badge badge-soft-success">Active</div>
-                   </td>
-
-                                    <td>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td>
-                      Jhon Doe
-                   </td>
-                   <!--end::Customer=-->
-                   
-                   <!--begin::Billing=-->
-                   <td>
-                      abdul@gmail.com
-                   </td>
-                   <!--end::Billing=-->
-                   <!--begin::Product=-->
-                   <td>612708557</td>
-                   <!--end::Product=-->
-                   <!--begin::Date=-->
-                   <td>user29</td>
-                   <!--end::Date=-->
-                   <td>
-                      <div class="badge bg-warning">Shop Owner</div>
-                   </td>
-                   <td>
-                      <div class="badge badge-soft-success">Active</div>
-                   </td>
-
-                                    <td>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <td>
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                        </div>
-                                    </td>
-                                    <td>
-                      Jhon Doe
-                   </td>
-                   <!--end::Customer=-->
-                   
-                   <!--begin::Billing=-->
-                   <td>
-                      abdul@gmail.com
-                   </td>
-                   <!--end::Billing=-->
-                   <!--begin::Product=-->
-                   <td>612708557</td>
-                   <!--end::Product=-->
-                   <!--begin::Date=-->
-                   <td>user29</td>
-                   <!--end::Date=-->
-                   <td>
-                      <div class="badge bg-warning">Shop Owner</div>
-                   </td>
-                   <td>
-                      <div class="badge badge-soft-success">Active</div>
-                   </td>
-
-                                    <td>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>
-                                        <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-delete"></i></a>
-                                    </td>
-                                </tr>
+                                @foreach ($users as $user)
+                                    <tr>
+                                        <td>{{$user->id}}</td>
+                                        <td>{{$user->first_name}} {{$user->last_name}}</td>
+                                        <td>{{$user->email}}</td>
+                                        <td>{{$user->phone_number}}</td>
+                                        <td>{{$user->username}}</td>
+                                        <td>{{$user->type}}</td>
+                                        <td>{{date('F d,Y', strtotime($user->created_at))}}</td>    
+                                        <td>
+                                            <div class="badge badge-soft-{{($user->is_active == 1)? "success" : "danger"}}">{{($user->is_active == 1)? "Active" : "Inactive"}}</div>
+                                        </td>
+                                        <td>
+                                            <a href="{{route('user_edit', ['id' => $user->id ])}}" class="action-icon"> <i class="mdi mdi-square-edit-outline text-primary"></i></a>
+                                            <a href="{{route('user_delete', ['id' => $user->id ])}}" class="action-icon delete-confirm"> <i class="mdi mdi-delete text-danger"></i></a>
+                                        </td> 
+                                    </tr>
+                                @endforeach
                                 
                                 
                                 
@@ -208,6 +115,9 @@ Users
                                 
                             </tbody>
                         </table>
+                        <div class="row">
+                            {{ $users->links('vendor.pagination.custom') }}
+                        </div>
                     </div>
 
                     <ul class="pagination pagination-rounded justify-content-end my-2">

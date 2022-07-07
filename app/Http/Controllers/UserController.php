@@ -45,7 +45,7 @@ class UserController extends Controller
         return redirect('/');
     }
 
-    public function user_list(){
+    public function user_list(Request $request){
         $search = $request['search'] ?? "";
         if($search != ""){
             $users = User::where('first_name','like',"%$search%")->orwhere('last_name', 'like', "%$search%")->orwhere('phone_number', 'like', "%$search%")->orwhere('email', 'like', "%$search%")->orwhere('type', 'like', "%$search%")->paginate(10);
@@ -65,9 +65,11 @@ class UserController extends Controller
     }
 
     public function store(Request $request){
+
         $request->validate(
             [
-                'name' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
                 'type' => 'required'
             ]
         );
@@ -93,33 +95,36 @@ class UserController extends Controller
     }
 
     public function edit($id){
-        $area = User::find($id);
-        if(!is_null($area)){
-            $label = "Update Area";
-            $url = url('/area/update'). "/" . $id;
-            $data = compact('area', 'label', 'url');
-            return view('adminpanel/area/area-add')->with($data);
+        $user = User::find($id);
+        if(!is_null($user)){
+            $label = "Update User";
+            $url = url('/user/update'). "/" . $id;
+            $data = compact('user', 'label', 'url');
+            return view('adminpanel/user/user-add')->with($data);
         }else{
-            Alert::error('Error', 'Area not found');
-            return redirect('area_list');
+            Alert::error('Error', 'User not found');
+            return redirect('user_list');
         }
     }
 
     public function update($id, Request $request){
-        $area = User::find($id);
-        $area->name = $request['name'];
-        $area->dimension = $request['dimension'];
-        $area->type = $request['type'];
-        $area->type_detail = $request['type_detail'];
-        $area->is_active = $request['is_active'];
-        $result = $area->save();
+        $user = User::find($id);
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->phone_number = $request['phone_number'];
+        $user->username = $request['username'];
+        $user->email = $request['email'];
+        $user->password = $request['password'];
+        $user->type = $request['type'];       
+        $user->is_active = $request['is_active'];
+        $result = $user->save();
         
         if($result){
-            Alert::success('Congrats', 'Area is Successfully Updated');
-            return redirect('area_list');
+            Alert::success('Congrats', 'User is Successfully Updated');
+            return redirect('user_list');
         }else{
-            Alert::error('Error', 'Area Failed to Update');
-            return redirect('area_create');
+            Alert::error('Error', 'User Failed to Update');
+            return redirect('user_create');
         }
     }
 
@@ -127,7 +132,7 @@ class UserController extends Controller
     {
         User::find($id)->delete();
   
-        Alert::success('Deleted', 'Area is Successfully Deleted');
-        return redirect('area_list');
+        Alert::success('Deleted', 'User is Successfully Deleted');
+        return redirect('user_list');
     }
 }
