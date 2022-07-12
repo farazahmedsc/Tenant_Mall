@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Facades\Http;
 use App\Models\Tenants;
 use App\Models\Area;
+use App\Models\Rent;
 use RealRashid\SweetAlert\Facades\Alert;
+
 
 class TenantController extends Controller
 {
@@ -30,10 +32,21 @@ class TenantController extends Controller
 
     public function create(){
         $tenant = new Tenants();
+        
+        // $areas = Area::leftJoin('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.area_alloted', '=', Null)->orwhere('tenants.is_active', '=', '0')->get();
         $areas = Area::where('is_active', '=', '1')->get();
+        $occupied_area = Area::select('area.id')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.is_active',1)->get();
+
+        $occupied_area = $occupied_area->pluck('id')->toArray();
+        // echo "<pre>";
+        // print_r($occupied_area);
+        // echo "<br><br>";
+        // echo in_array(22, $occupied_area); 
+        // die;
+
         $label = "Add Tenant";
         $url = url('/tenant_store');
-        $data = compact('tenant','label', 'url', 'areas');
+        $data = compact('tenant','label', 'url', 'areas', 'occupied_area');
         return view('adminpanel/tenant/tenant-add')->with($data);
     }
 
@@ -47,6 +60,14 @@ class TenantController extends Controller
                 'maintenance' => 'required'                
             ]
         );
+        if($request->hasFile('photo')){  
+            $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
+            $request->file('photo')->move(public_path('uploads/tenant'), $file);
+    
+        }else{
+            $file = 'avatar.jpg';
+        }
+
 
         $tenant = new Tenants();
         $tenant->first_name = $request['first_name'];
@@ -57,7 +78,27 @@ class TenantController extends Controller
         $tenant->acquiring_date = $request['acquiring_date'];
         $tenant->rent = $request['rent'];
         $tenant->maintenance = $request['maintenance'];
+        $tenant->photo = $file;
         $result = $tenant->save();
+
+
+        $tenant = Tenants::orderBy('created_at', 'desc')->first();
+
+        $last_rent = Rent::orderBy('created_at', 'desc')->first();
+
+        $rent = new Rent();
+        $rent->invoice_no = $last_rent->invoice_no +1;
+        $rent->t_id = $tenant->id;//['t_id'];
+        $rent->a_id = $tenant->area_alloted;//['a_id'];
+        $rent->rent = $tenant->rent;
+        $rent->maintenance = $tenant->maintenance;
+        $rent->total_amount = $tenant->rent + $tenant->maintenance;
+        $rent->generation_date = $tenant->acquiring_date;//date('Y-m-d');
+        $rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($tenant->acquiring_date)));
+        $rent->generated = '0';
+        $rent->status = 'unpaid';
+        $rent->save();
+
 
         if($result){
             Alert::success('Congrats', 'Tenant is Successfully Registered');
@@ -71,8 +112,9 @@ class TenantController extends Controller
 
     public function edit($id){
         $tenant = Tenants::find($id);
-        $areas = Area::where('is_active', '=', '1')->get();
 
+        $areas = Area::leftJoin('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.area_alloted', '=', Null)->orwhere('tenants.area_alloted', '=', $tenant->area_alloted)->get();
+        // $areas = Area::where('is_active', '=', '1')->get(); ->where('area.is_active', '=', '1')->orwhere('tenants.is_active', '=', '1')
         if(!is_null($tenant)){
             $label = "Update Tenant";
             $url = url('/tenant/update'). "/" . $id;
@@ -105,6 +147,12 @@ class TenantController extends Controller
         $tenant->acquiring_date = $request['acquiring_date'];
         $tenant->rent = $request['rent'];
         $tenant->maintenance = $request['maintenance'];
+        $tenant->maintenance = $request['is_active'];
+        if($request->hasFile('photo')){  
+            $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
+            $request->file('photo')->move(public_path('uploads/tenant'), $file);
+            $tenant->photo = $file;
+        }
         $result = $tenant->save();
 
         

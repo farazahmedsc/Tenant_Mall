@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Facades\Http;
 use App\Models\User;
+use App\Models\Area;
 use Session;
 
 
@@ -74,6 +75,14 @@ class UserController extends Controller
             ]
         );
 
+        if($request->hasFile('photo')){  
+            $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
+            $request->file('photo')->move(public_path('uploads/user'), $file);
+    
+        }else{
+            $file = 'avatar.jpg';
+        }
+
         $user = new User();
         $user->first_name = $request['first_name'];
         $user->last_name = $request['last_name'];
@@ -82,6 +91,7 @@ class UserController extends Controller
         $user->email = $request['email'];
         $user->password = $request['password'];
         $user->type = $request['type'];
+        $user->photo = $file;
         $result = $user->save();
 
         if($result){
@@ -117,6 +127,11 @@ class UserController extends Controller
         $user->password = $request['password'];
         $user->type = $request['type'];       
         $user->is_active = $request['is_active'];
+        if($request->hasFile('photo')){  
+            $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
+            $request->file('photo')->move(public_path('uploads/user'), $file);
+            $user->photo = $file;
+        }
         $result = $user->save();
         
         if($result){
@@ -134,5 +149,51 @@ class UserController extends Controller
   
         Alert::success('Deleted', 'User is Successfully Deleted');
         return redirect('user_list');
+    }
+
+    public function my_account(){
+        return view('adminpanel.my_account');
+    }
+
+    public function my_account_update(Request $request){
+        $user = User::find(session('user')['id']);
+        $user->first_name = $request['first_name'];
+        $user->last_name = $request['last_name'];
+        $user->phone_number = $request['phone_number'];
+        $user->username = $request['username'];
+        $user->email = $request['email'];
+        $user->password = $request['password'];
+        
+
+        
+
+        if($request->hasFile('photo')){  
+            $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
+            $request->file('photo')->move(public_path('uploads/user'), $file);
+            $user->photo = $file;
+        }
+        $result = $user->save();
+
+        $user = User::find(session('user')['id']);
+        session()->put('user',$user);
+        
+        if($result){
+            Alert::success('Congrats', 'Info is Successfully Updated');
+            return redirect('my_account');
+        }else{
+            Alert::error('Error', 'Info Failed to Update');
+            return redirect('my_account');
+        }
+    }
+
+    public function shops(){
+        $frontshops = Area::select('tenants.*', 'area.name as a_name' , 'area.id as a_id', 'area.type_detail as a_type_detail')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('area.type_detail', '=', 'Front Shop')->orwhere('tenants.is_active', '=', '0')->get();
+        $centershops = Area::select('tenants.*', 'area.name as a_name' , 'area.id as a_id', 'area.type_detail as a_type_detail')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('area.type_detail', '=', 'Center Shop')->orwhere('tenants.is_active', '=', '0')->get();
+
+
+        // echo "<pre>";
+        // print_r($centershops); die;
+        $data = compact('frontshops', 'centershops');
+        return view('adminpanel.shops')->with($data);
     }
 }

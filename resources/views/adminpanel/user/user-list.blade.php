@@ -78,7 +78,7 @@ Users
                         <table class="table table-centered table-nowrap table-borderless table-hover mb-0">
                             <thead class="table-light">
                                 <tr>      
-                                    <th>Id</th>                             
+                                    <th>Photo</th>                             
                                     <th>Full Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -92,7 +92,7 @@ Users
                             <tbody>
                                 @foreach ($users as $user)
                                     <tr>
-                                        <td>{{$user->id}}</td>
+                                        <td><img src="{{url('/')}}/uploads/user/{{(is_null($user->photo))? 'avatar.jpg' : $user->photo}}" alt="User Photo" class="img-table"></td>
                                         <td>{{$user->first_name}} {{$user->last_name}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>{{$user->phone_number}}</td>

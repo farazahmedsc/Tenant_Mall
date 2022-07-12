@@ -20,8 +20,8 @@ class AreaSeeder extends Seeder
             $area = new Area();
             $area->name = $faker->name;
             $area->dimension = $faker->address;
-            $area->type = 'Shop';
-            $area->type_detail = 'Front Shop';
+            $area->type = 'Office';
+            // $area->type_detail = '';
             $area->save();
         }
         

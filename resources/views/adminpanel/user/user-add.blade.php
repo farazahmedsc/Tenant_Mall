@@ -45,7 +45,7 @@ Add User
             <div class="card">
                 <div class="card-body">
                 <h5 class="form-section mb-3 font-24">{{$label}}</h5>
-                <form action="{{$url}}" method="post">
+                <form action="{{$url}}" method="post" enctype="multipart/form-data">
                     @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
@@ -88,8 +88,12 @@ Add User
                                 </select>
                             </div>
                         </div>
-                        <div class="row {{(!is_null($user->is_active)) ? '' : 'd-none';}}">
+                        <div class="row">
                             <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Photo of User</label>
+                                <input type="file" name="photo" class="form-control">                                 
+                            </div>
+                            <div class="form-group col-md-6 mb-3 {{(!is_null($user->is_active)) ? '' : 'd-none';}}">
                                 <label>Status</label>
                                 <select name="is_active" class="form-control form-select form-select-solid" >                                        
                                     <option value="1" {{($user->is_active == 1)? 'Selected' : '';}}>Active</option>
@@ -101,7 +105,7 @@ Add User
 
                     <div class="row mt-3">
                         <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-success waves-effect waves-light m-1"><i class="fe-check-circle me-1"></i> Create</button>
+                            <button type="submit" class="btn btn-success waves-effect waves-light m-1"><i class="fe-check-circle me-1"></i> Submit</button>
                             <button type="reset" class="btn btn-light waves-effect waves-light m-1"><i class="fe-x me-1"></i> Cancel</button>
                         </div>
                     </div>

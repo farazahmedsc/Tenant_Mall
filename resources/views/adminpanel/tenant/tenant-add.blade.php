@@ -1,6 +1,6 @@
 @extends('layout.main')
 @push('title')
-Add Tenant
+{{$label}}
 @endpush
 
 @push('css-link')
@@ -47,7 +47,7 @@ Add Tenant
                 <div class="card-body">
 
                     <h5 class="form-section mb-3 font-24">{{$label}}</h5>
-                    <form action="{{$url}}" method="post">
+                    <form action="{{$url}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
@@ -81,7 +81,7 @@ Add Tenant
                             </div>
                             <div class="form-group col-md-6 mb-3">
                                 <label>Business Name</label>
-                                <input type="text" name="business_name" class="form-control form-control-solid" value="{{$tenant->business_name}}" required>
+                                <input type="text" name="business_name" class="form-control form-control-solid" value="{{$tenant->business_name}}">
                             </div>
 
                         </div>
@@ -91,10 +91,13 @@ Add Tenant
                                 <select name="area_alloted" class="form-control form-select form-select-solid" >
                                     <option value="">Select</option>
                                     @foreach ($areas as $area)
-                                        <option value="{{$area->id}}" {{($tenant->area_alloted == $area->id)? "Selected" : "" ;}}>{{$area->name}}</option>
+                                        @if(!in_array($area->id, $occupied_area))
+                                           
+                                      
+                                        <option value="{{$area->id}}" {{($tenant->area_alloted == $area->id && str_contains($label, 'Update'))? "Selected" : "" ;}}>{{$area->name}}</option>
+                                        @endif
                                     @endforeach
-                                    {{-- <option value="1" {{($tenant->area_alloted == "1")? "Selected" : "" ;}}>Shop #46</option>
-                                    <option value="2" {{($tenant->area_alloted == "2")? "Selected" : "" ;}}>Shop #47</option> --}}
+                                  
                                 </select>
                             </div>
                             <div class="form-group col-md-6 mb-3">
@@ -121,8 +124,16 @@ Add Tenant
                             </div>
                         </div>
 
-                        <div class="row {{(!is_null($tenant->is_active)) ? '' : 'd-none';}}">
+
+                        
+
+                        <div class="row">
                             <div class="form-group col-md-6 mb-3">
+                                <label class="form-label">Photo of Tenant</label>
+                                <input type="file" name="photo" class="form-control">                                 
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3 {{(!is_null($tenant->is_active)) ? '' : 'd-none';}}">
                                 <label>Status</label>
                                 <select name="is_active" class="form-control form-select form-select-solid" >                                        
                                     <option value="1" {{($tenant->is_active == 1)? 'Selected' : '';}}>Active</option>

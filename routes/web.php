@@ -8,7 +8,8 @@ use App\Http\Controllers\AreaController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
-
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\RentController;
 
 
 /*
@@ -61,7 +62,17 @@ Route::middleware('userAuthentication')->group(function (){
       Route::get('/user/edit/{id}', [UserController::class, 'edit'])->name('user_edit');
       Route::get('/user/delete/{id}', [UserController::class, 'delete'])->name('user_delete');
     
-    
+      Route::get('/setting', [CompanyController::class, 'index']);
+
+      Route::get('/my_account', [UserController::class, 'my_account']);
+
+      Route::get('/shops', [UserController::class, 'shops']);
+
+      Route::get('/rent_history', [RentController::class, 'index']);
+
+      Route::get('/invoice_list', [RentController::class, 'invoice_list']);
+      Route::get('/generate_pdf/{id}', [RentController::class, 'generate_pdf'])->name('generate_pdf');
+      Route::get('/invoice/{id}', [RentController::class, 'invoice']);
 });
 
 
@@ -85,7 +96,15 @@ Route::middleware('userAuthentication')->group(function (){
     Route::post('/user_store', [UserController::class, 'store']);
     Route::post('/user/update/{id}', [UserController::class, 'update']);
 
+    Route::post('/setting_update', [CompanyController::class, 'setting_update']);
 
+    Route::post('/my_account_update', [UserController::class, 'my_account_update']);
+
+    Route::post('/pay_rent', [RentController::class, 'pay_rent']);
+
+    Route::post('/pay_rent2', [RentController::class, 'pay_rent2']);
+
+    
 });
 
 
