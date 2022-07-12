@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,9 +14,23 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+    protected $commands = [
+        Commands\RentGenerate::class,
+    ];
+
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // $schedule->call(function () {
+        //     DB::table('test')->insert(
+        //         [
+        //             'name' => 'testing',
+        //             'dates' => date('Y-m-d H:i:s')
+        //         ]
+        //     );
+        // })->everyMinute();
+        $schedule->command('rent:generate')
+        ->everyMinute();
     }
 
     /**
@@ -25,6 +40,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
+     
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');

@@ -11,7 +11,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\RentController;
 
-
+use App\Models\Rent;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -105,6 +105,50 @@ Route::middleware('userAuthentication')->group(function (){
     Route::post('/pay_rent2', [RentController::class, 'pay_rent2']);
 
     
+});
+
+Route::get('/test', function(){
+    // DB::table('test')->insert(
+    //     [
+    //         'name' => 'testing',
+    //         'dates' => date('Y-m-d H:i:s')
+    //     ]
+    // );
+    //$rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
+    // $rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
+
+    // $rents = Rent::where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->get();
+    // echo date('Y-m-d');
+    // foreach($rents as $rent){
+    //     echo "<pre>";
+    //     print_r($rent->t_id);
+    //     echo "</pre>";
+    //     echo "<br><br>";
+    // }
+
+    $rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
+
+        foreach($rents as $rent){
+            $last_rent = Rent::orderBy('created_at', 'desc')->first();
+
+            $new_rent = new Rent();
+            $new_rent->invoice_no = $last_rent->invoice_no +1;
+            $new_rent->t_id = $rent->t_id;
+            $new_rent->a_id = $rent->a_id;
+            $new_rent->rent = $rent->rent;
+            $new_rent->maintenance = $rent->maintenance;
+            $new_rent->total_amount = $rent->total_amount;
+            $new_rent->generation_date = $rent->next_generation_date;
+            $new_rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($rent->next_generation_date)));;
+            $new_rent->generated = '0';
+            $new_rent->status = 'unpaid';
+            $new_rent->save();
+
+            $temp_rent = Rent::find($rent->id);
+            $temp_rent->generated = '1';
+            $temp_rent->save();
+        }
+
 });
 
 
