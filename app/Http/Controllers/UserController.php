@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Facades\Http;
 use App\Models\User;
 use App\Models\Area;
+use App\Models\Tenants;
+use App\Models\Rent;
+use App\Models\Expense;
 use Session;
 
 
@@ -19,7 +22,81 @@ class UserController extends Controller
     }
 
     public function index(){
-        return view('adminpanel/dashboard');
+
+        $alloted_shop = Tenants::where('is_active','1')->get()->count();
+        $total_rent = Rent::where('status','=','paid')->sum('total_amount');
+        $total_expense = Expense::where('is_active','1')->sum('amount');
+        $total_user = User::where('is_active','1')->get()->count();
+
+        $month_rent = Rent::whereMonth('pay_date', date('m'))->sum('pay_amount');
+        $rent_collected = Rent::where('status','=','paid')->whereMonth('pay_date', date('m'))->sum('pay_amount');
+        $rent_remaining = Rent::where('status','=','unpaid')->whereMonth('pay_date', date('m'))->sum('pay_amount');
+        $rent_percent =number_format( ($rent_collected * 100)/$month_rent ,1);
+        
+        $recent_payments = Rent::select('rent.*', 'tenants.*', 'area.*', 'area.name as a_name')->join('tenants', 'rent.t_id','=','tenants.id')->join('area','rent.a_id','=','area.id')->where('rent.status','paid')->orderBy('rent.id','desc')->limit(5)->get();
+        $unpaid_payments = Rent::select('rent.*', 'tenants.*', 'area.*', 'area.name as a_name')->join('tenants', 'rent.t_id','=','tenants.id')->join('area','rent.a_id','=','area.id')->where('rent.status','unpaid')->orderBy('rent.id','desc')->limit(5)->get();
+        
+        $search_date = date('Y') . '-01-01';
+        $revenues_monthly = Rent::select(
+            DB::raw('year(pay_date) as year'),
+            DB::raw('month(pay_date) as month'),
+            DB::raw('sum(pay_amount) as price'),
+        )->where(DB::raw('date(pay_date)'), '>=', $search_date)
+            ->where('status','paid')
+            ->groupBy('year')
+            ->groupBy('month')
+            ->get()
+            ->toArray();
+
+        $expenses_monthly = Expense::select(
+            DB::raw('year(expense_date) as year'),
+            DB::raw('month(expense_date) as month'),
+            DB::raw('sum(amount) as price'),
+        )->where(DB::raw('date(expense_date)'), '>=', $search_date)
+            ->where('is_active','1')
+            ->groupBy('year')
+            ->groupBy('month')
+            ->get()
+            ->toArray();
+
+        $revenues = $expenses = array();
+        $count_revenue = $count_expense = 0;
+            for ($i=1; $i <=12 ; $i++) { 
+                $temp = 0;
+
+                if($revenues_monthly[$count_revenue]['month'] == $i && $revenues_monthly[$count_revenue]['year'] == date('Y')){
+                    $temp = $revenues_monthly[$count_revenue]['price'];
+                    if($count_revenue < count($revenues_monthly)-1){
+                        $count_revenue++;
+                    }                
+                }
+
+                array_push($revenues,$temp);
+
+
+
+                $tempExpense =0;
+
+                if($expenses_monthly[$count_expense]['month'] == $i && $expenses_monthly[$count_expense]['year'] == date('Y')){
+                    $tempExpense = $expenses_monthly[$count_expense]['price'];
+                    if($count_expense < count($expenses_monthly)-1){
+                        $count_expense++;
+                    }                
+                }
+
+                array_push($expenses,$tempExpense);
+
+            }
+        // echo "<pre>";
+        // print_r($expenses);
+        // echo "<br><br>";
+
+        // print_r($expenses_monthly);
+        
+        // die;
+
+        $data = compact('alloted_shop', 'total_rent', 'total_expense', 'total_user', 'month_rent', 'rent_collected', 'rent_remaining', 'rent_percent', 'recent_payments' ,'unpaid_payments' ,'revenues' , 'expenses');
+        return view('adminpanel/dashboard')->with($data);
     }
 
     public function authenticate(Request $request){

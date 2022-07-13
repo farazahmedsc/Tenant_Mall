@@ -80,9 +80,9 @@ Invoice List
                                     </form>                      
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="text-md-end">
+                                    {{-- <div class="text-md-end">
                                         <button type="button" class="btn btn-primary waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target="#centermodal">Generate Invoice</button>
-                                    </div>
+                                    </div> --}}
                                 </div><!-- end col-->
                             </div>
     

@@ -24,11 +24,11 @@ use App\Models\Rent;
 */
 // --------- GET ROUTES STARTS --------- //
 
-Route::middleware('userAuthentication')->group(function (){
+Route::middleware(['userAuthentication','adminAuthentication'])->group(function (){
 
-    Route::get('/', [UserController::class, 'index']);
-    Route::get('/dashboard', [UserController::class, 'index']);
-    Route::get('/logout', [UserController::class, 'logout']);
+    Route::get('/', [UserController::class, 'index'])->withoutmiddleware('adminAuthentication');
+    Route::get('/dashboard', [UserController::class, 'index'])->withoutmiddleware('adminAuthentication');
+    Route::get('/logout', [UserController::class, 'logout'])->withoutmiddleware('adminAuthentication');
 
     // Area -----
     Route::get('/area_list', [AreaController::class, 'index']);
@@ -45,10 +45,10 @@ Route::middleware('userAuthentication')->group(function (){
 
 
      // Expense Category -----
-     Route::get('/expense_category_list', [ExpenseCategoryController::class, 'index']);
-     Route::get('/expense_category/create', [ExpenseCategoryController::class, 'create'])->name('expense_category_create');
-     Route::get('/expense_category/edit/{id}', [ExpenseCategoryController::class, 'edit'])->name('expense_category_edit');
-     Route::get('/expense_category/delete/{id}', [ExpenseCategoryController::class, 'delete'])->name('expense_category_delete');
+     Route::get('/expense_category_list', [ExpenseCategoryController::class, 'index'])->withoutmiddleware('adminAuthentication');
+     Route::get('/expense_category/create', [ExpenseCategoryController::class, 'create'])->name('expense_category_create')->withoutmiddleware('adminAuthentication');
+     Route::get('/expense_category/edit/{id}', [ExpenseCategoryController::class, 'edit'])->name('expense_category_edit')->withoutmiddleware('adminAuthentication');
+     Route::get('/expense_category/delete/{id}', [ExpenseCategoryController::class, 'delete'])->name('expense_category_delete')->withoutmiddleware('adminAuthentication');
 
      // Expense -----
      Route::get('/expense_list', [ExpenseController::class, 'index']);
@@ -64,90 +64,77 @@ Route::middleware('userAuthentication')->group(function (){
     
       Route::get('/setting', [CompanyController::class, 'index']);
 
-      Route::get('/my_account', [UserController::class, 'my_account']);
+      Route::get('/my_account', [UserController::class, 'my_account'])->withoutmiddleware('adminAuthentication');
 
       Route::get('/shops', [UserController::class, 'shops']);
 
-      Route::get('/rent_history', [RentController::class, 'index']);
+      Route::get('/rent_history', [RentController::class, 'index'])->withoutmiddleware('adminAuthentication');
 
-      Route::get('/invoice_list', [RentController::class, 'invoice_list']);
-      Route::get('/generate_pdf/{id}', [RentController::class, 'generate_pdf'])->name('generate_pdf');
-      Route::get('/invoice/{id}', [RentController::class, 'invoice']);
+      Route::get('/invoice_list', [RentController::class, 'invoice_list'])->withoutmiddleware('adminAuthentication');
+      Route::get('/generate_pdf/{id}', [RentController::class, 'generate_pdf'])->name('generate_pdf')->withoutmiddleware('adminAuthentication');
+      Route::get('/invoice/{id}', [RentController::class, 'invoice'])->withoutmiddleware('adminAuthentication');
 });
 
 
 // --------- POST ROUTES STARTS --------- //
 
-Route::middleware('userAuthentication')->group(function (){
+Route::middleware(['userAuthentication','adminAuthentication'])->group(function (){
 
-    Route::post('/authenticate', [UserController::class, 'authenticate'])->withoutmiddleware('userAuthentication');
+    Route::post('/authenticate', [UserController::class, 'authenticate'])->withoutmiddleware(['userAuthentication', 'adminAuthentication']);
     Route::post('/area_store', [AreaController::class, 'store']);
     Route::post('/area/update/{id}', [AreaController::class, 'update']);
 
     Route::post('/tenant_store', [TenantController::class, 'store']);
     Route::post('/tenant/update/{id}', [TenantController::class, 'update']);
 
-    Route::post('/expense_category_store', [ExpenseCategoryController::class, 'store']);
-    Route::post('/expense_category/update/{id}', [ExpenseCategoryController::class, 'update']);
+    Route::post('/expense_category_store', [ExpenseCategoryController::class, 'store'])->withoutmiddleware('adminAuthentication');
+    Route::post('/expense_category/update/{id}', [ExpenseCategoryController::class, 'update'])->withoutmiddleware('adminAuthentication');
 
-    Route::post('/expense_store', [ExpenseController::class, 'store']);
-    Route::post('/expense/update/{id}', [ExpenseController::class, 'update']);
+    Route::post('/expense_store', [ExpenseController::class, 'store'])->withoutmiddleware('adminAuthentication');
+    Route::post('/expense/update/{id}', [ExpenseController::class, 'update'])->withoutmiddleware('adminAuthentication');
 
     Route::post('/user_store', [UserController::class, 'store']);
     Route::post('/user/update/{id}', [UserController::class, 'update']);
 
     Route::post('/setting_update', [CompanyController::class, 'setting_update']);
 
-    Route::post('/my_account_update', [UserController::class, 'my_account_update']);
+    Route::post('/my_account_update', [UserController::class, 'my_account_update'])->withoutmiddleware('adminAuthentication');
 
-    Route::post('/pay_rent', [RentController::class, 'pay_rent']);
+    Route::post('/pay_rent', [RentController::class, 'pay_rent'])->withoutmiddleware('adminAuthentication');
 
-    Route::post('/pay_rent2', [RentController::class, 'pay_rent2']);
+    Route::post('/pay_rent2', [RentController::class, 'pay_rent2'])->withoutmiddleware('adminAuthentication');
 
     
 });
 
 Route::get('/test', function(){
-    // DB::table('test')->insert(
-    //     [
-    //         'name' => 'testing',
-    //         'dates' => date('Y-m-d H:i:s')
-    //     ]
-    // );
-    //$rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
+
+// echo "<pre>";
+// print_r(session('user'));
+// echo "<br><br>";
+// print_r(session('user')->type);
     // $rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
 
-    // $rents = Rent::where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->get();
-    // echo date('Y-m-d');
-    // foreach($rents as $rent){
-    //     echo "<pre>";
-    //     print_r($rent->t_id);
-    //     echo "</pre>";
-    //     echo "<br><br>";
-    // }
+    //     foreach($rents as $rent){
+    //         $last_rent = Rent::orderBy('created_at', 'desc')->first();
 
-    $rents = Rent::select('rent.*')->join('tenants','rent.t_id','=','tenants.id')->where('rent.next_generation_date', date('Y-m-d'))->where('rent.generated', '0')->where('tenants.is_active','1')->get();
+    //         $new_rent = new Rent();
+    //         $new_rent->invoice_no = $last_rent->invoice_no +1;
+    //         $new_rent->t_id = $rent->t_id;
+    //         $new_rent->a_id = $rent->a_id;
+    //         $new_rent->rent = $rent->rent;
+    //         $new_rent->maintenance = $rent->maintenance;
+    //         $new_rent->total_amount = $rent->total_amount;
+    //         $new_rent->generation_date = $rent->next_generation_date;
+    //         $new_rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($rent->next_generation_date)));;
+    //         $new_rent->generated = '0';
+    //         $new_rent->status = 'unpaid';
+    //         $new_rent->save();
 
-        foreach($rents as $rent){
-            $last_rent = Rent::orderBy('created_at', 'desc')->first();
-
-            $new_rent = new Rent();
-            $new_rent->invoice_no = $last_rent->invoice_no +1;
-            $new_rent->t_id = $rent->t_id;
-            $new_rent->a_id = $rent->a_id;
-            $new_rent->rent = $rent->rent;
-            $new_rent->maintenance = $rent->maintenance;
-            $new_rent->total_amount = $rent->total_amount;
-            $new_rent->generation_date = $rent->next_generation_date;
-            $new_rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($rent->next_generation_date)));;
-            $new_rent->generated = '0';
-            $new_rent->status = 'unpaid';
-            $new_rent->save();
-
-            $temp_rent = Rent::find($rent->id);
-            $temp_rent->generated = '1';
-            $temp_rent->save();
-        }
+    //         $temp_rent = Rent::find($rent->id);
+    //         $temp_rent->generated = '1';
+    //         $temp_rent->save();
+    //     }
 
 });
 
