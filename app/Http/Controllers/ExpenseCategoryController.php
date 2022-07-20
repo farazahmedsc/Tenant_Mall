@@ -54,6 +54,28 @@ class ExpenseCategoryController extends Controller
         }
         
     }
+    public function store_from_expense(Request $request){
+        $request->validate(
+            [
+                'name' => 'required'
+            ]
+        );
+
+        $expense = new ExpenseCategory();
+        $expense->name = $request['name'];
+      
+        $result = $expense->save();
+
+        if($result){
+            Alert::success('Congrats', 'Expense Category is Successfully Registered');
+            return redirect('expense/create');
+        }else{
+            Alert::error('Error', 'Expense Category Failed to Add');
+            return redirect('expense/create');
+        }
+        
+    }
+    
 
     public function edit($id){
         $expense = ExpenseCategory::find($id);

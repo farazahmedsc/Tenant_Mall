@@ -34,10 +34,10 @@ class TenantController extends Controller
         $tenant = new Tenants();
         
         // $areas = Area::leftJoin('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.area_alloted', '=', Null)->orwhere('tenants.is_active', '=', '0')->get();
-        $areas = Area::where('is_active', '=', '1')->get();
-        $occupied_area = Area::select('area.id')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.is_active',1)->get();
+        $areas = Area::where('is_active', '=', '1')->where('alloted','=','0')->get();
+        // $occupied_area = Area::select('area.id')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.is_active',1)->get();
 
-        $occupied_area = $occupied_area->pluck('id')->toArray();
+        // $occupied_area = $occupied_area->pluck('id')->toArray();
         // echo "<pre>";
         // print_r($occupied_area);
         // echo "<br><br>";
@@ -46,7 +46,7 @@ class TenantController extends Controller
 
         $label = "Add Tenant";
         $url = url('/tenant_store');
-        $data = compact('tenant','label', 'url', 'areas', 'occupied_area');
+        $data = compact('tenant','label', 'url', 'areas');
         return view('adminpanel/tenant/tenant-add')->with($data);
     }
 
@@ -60,25 +60,53 @@ class TenantController extends Controller
                 'maintenance' => 'required'                
             ]
         );
+
         if($request->hasFile('photo')){  
             $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
-            $request->file('photo')->move(public_path('uploads/tenant'), $file);
-    
+            $request->file('photo')->move(public_path('uploads/tenant'), $file);    
         }else{
             $file = 'avatar.jpg';
         }
 
+        if($request->hasFile('license')){  
+            $license = $request['first_name'] . '_' . $request->file('license')->getClientOriginalName() ;
+            $request->file('license')->move(public_path('uploads/tenant'), $license);  
+        } 
+
+        if($request->hasFile('registration')){  
+            $registration = $request['first_name'] . '_' . $request->file('registration')->getClientOriginalName() ;
+            $request->file('registration')->move(public_path('uploads/tenant'), $registration);  
+        } 
+
+        if($request->hasFile('insurance')){  
+            $insurance = $request['first_name'] . '_' . $request->file('insurance')->getClientOriginalName() ;
+            $request->file('insurance')->move(public_path('uploads/tenant'), $insurance);  
+        } 
+
+        if($request->hasFile('lease')){  
+            $lease = $request['first_name'] . '_' . $request->file('lease')->getClientOriginalName() ;
+            $request->file('lease')->move(public_path('uploads/tenant'), $lease);  
+        } 
+
+        $area = Area::find($request['area_alloted']);
+        $area->alloted = 1;
+        $area->save();
 
         $tenant = new Tenants();
         $tenant->first_name = $request['first_name'];
         $tenant->last_name = $request['last_name'];
         $tenant->phone_number = $request['phone_number'];
         $tenant->business_name = $request['business_name'];
+        $tenant->email = $request['email'];
         $tenant->area_alloted = $request['area_alloted'];
         $tenant->acquiring_date = $request['acquiring_date'];
         $tenant->rent = $request['rent'];
         $tenant->maintenance = $request['maintenance'];
         $tenant->photo = $file;
+        $tenant->license = $license;
+        $tenant->registration = $registration;
+        $tenant->insurance = $insurance;
+        $tenant->lease = $lease;
         $result = $tenant->save();
 
 
@@ -112,9 +140,17 @@ class TenantController extends Controller
 
     public function edit($id){
         $tenant = Tenants::find($id);
+        // $areas = Area::where('is_active', '=', '1')->where('alloted','=','0')->orWhere('id', '=', $id)->get();
 
-        $areas = Area::leftJoin('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.area_alloted', '=', Null)->orwhere('tenants.area_alloted', '=', $tenant->area_alloted)->get();
+        $areas = DB::select("SELECT * from area where is_active=1 AND alloted=0 OR id=".$tenant->area_alloted);// Area::where('is_active', '=', '1')->where('alloted','=','0')->get();
+        // $areas = Area::select('tenants.*', 'area.*', 'area.id as a_id')->leftJoin('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.area_alloted', '=', Null)->orwhere('tenants.area_alloted', '=', $tenant->area_alloted)->get();
         // $areas = Area::where('is_active', '=', '1')->get(); ->where('area.is_active', '=', '1')->orwhere('tenants.is_active', '=', '1')
+        // $occupied_area = Area::select('area.id')->join('tenants' ,'area.id' , '=', 'tenants.area_alloted')->where('tenants.is_active',1)->where('area.id', '!=', $tenant->area_alloted)->get();
+
+        // $occupied_area = $occupied_area->pluck('id')->toArray();
+        
+        // echo "<pre>"; print_r($tenant);  die;
+
         if(!is_null($tenant)){
             $label = "Update Tenant";
             $url = url('/tenant/update'). "/" . $id;
@@ -137,22 +173,58 @@ class TenantController extends Controller
                 'maintenance' => 'required'                
             ]
         );
+        // echo $request['area_alloted']; die;
+
+        $area = Area::find($request['area_alloted']);
+        if($request['is_active'] == 1){
+            $area->alloted = 1;
+        }else{
+            $area->alloted = 0;
+        }
+       
+        $area->save();
+
 
         $tenant = Tenants::find($id);
         $tenant->first_name = $request['first_name'];
         $tenant->last_name = $request['last_name'];
         $tenant->phone_number = $request['phone_number'];
         $tenant->business_name = $request['business_name'];
+        $tenant->email = $request['email'];
         $tenant->area_alloted = $request['area_alloted'];
         $tenant->acquiring_date = $request['acquiring_date'];
         $tenant->rent = $request['rent'];
         $tenant->maintenance = $request['maintenance'];
-        $tenant->maintenance = $request['is_active'];
+        $tenant->is_active = $request['is_active'];
         if($request->hasFile('photo')){  
             $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
             $request->file('photo')->move(public_path('uploads/tenant'), $file);
             $tenant->photo = $file;
         }
+
+        if($request->hasFile('license')){  
+            $license = $request['first_name'] . '_' . $request->file('license')->getClientOriginalName() ;
+            $request->file('license')->move(public_path('uploads/tenant'), $license);  
+            $tenant->license = $license;
+        } 
+
+        if($request->hasFile('registration')){  
+            $registration = $request['first_name'] . '_' . $request->file('registration')->getClientOriginalName() ;
+            $request->file('registration')->move(public_path('uploads/tenant'), $registration);  
+            $tenant->registration = $registration;
+        } 
+
+        if($request->hasFile('insurance')){  
+            $insurance = $request['first_name'] . '_' . $request->file('insurance')->getClientOriginalName() ;
+            $request->file('insurance')->move(public_path('uploads/tenant'), $insurance); 
+            $tenant->insurance = $insurance; 
+        } 
+
+        if($request->hasFile('lease')){  
+            $lease = $request['first_name'] . '_' . $request->file('lease')->getClientOriginalName() ;
+            $request->file('lease')->move(public_path('uploads/tenant'), $lease);  
+            $tenant->lease = $lease;
+        } 
         $result = $tenant->save();
 
         
@@ -167,8 +239,14 @@ class TenantController extends Controller
 
     public function delete($id)
     {
-        Tenants::find($id)->delete();
-  
+        $tenant = Tenants::find($id);
+        
+        $area = Area::find($tenant->area_alloted);        
+        $area->alloted = 0;
+        $area->save();
+
+        $tenant->delete();
+
         Alert::success('Deleted', 'Tenant is Successfully Deleted');
         return redirect('tenant_list');
     }

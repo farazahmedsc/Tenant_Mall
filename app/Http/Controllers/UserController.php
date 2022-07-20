@@ -76,7 +76,7 @@ class UserController extends Controller
 
 
                 $tempExpense =0;
-
+                
                 if($expenses_monthly[$count_expense]['month'] == $i && $expenses_monthly[$count_expense]['year'] == date('Y')){
                     $tempExpense = $expenses_monthly[$count_expense]['price'];
                     if($count_expense < count($expenses_monthly)-1){

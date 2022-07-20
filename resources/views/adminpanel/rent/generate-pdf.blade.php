@@ -27,11 +27,12 @@
                                 <!--begin::Invoice 2 content-->
                                 <div class="mt-n1">
                                     <!--begin::Top-->
-                                    <div class="d-flex flex-stack pb-10">
+                                    <div class="d-flex flex-stack pb-10 mb-3">
                                         <!--begin::Logo-->
                                         <a href="#" class="mb-1">
-                                        <img src="{{$url}}" height="50" alt="image">
+                                        <img src="{{$url}}" height="80" alt="image">
                                         </a>
+                                        
                                         <!--end::Logo-->
                                         <!--begin::Action-->
                                         
@@ -104,8 +105,10 @@
                                                 <div class=" text-end" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif';font-weight:100; font-size: 14px!important;line-height:18px;">{{$company->name}}</div>
                                                 <!--end::Text-->
                                                 <!--end::Description-->
-                                                <div class=" text-end" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif'; font-weight:100;font-size: 14px!important;line-height:18px;">{{$company->street}} {{$company->apt}}
-                                                <br>{{$company->city}} {{$company->state}} {{$company->zip}}</div>
+                                                <div class=" text-end" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif'; font-weight:100;font-size: 14px!important;line-height:18px;">{{$company->street}} 
+                                                <br>{{$company->apt}}, {{$company->city}}, {{$company->zip}}
+                                                <br>{{$company->phone_number}}
+                                                <br>{{$company->email}}</div>
                                                 <!--end::Description-->
                                             </div>
                                                 </td>

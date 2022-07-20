@@ -40,9 +40,17 @@ class RentController extends Controller
 
     public function pay_rent(Request $request){
         $rent = Rent::find($request->rent_id);
-        $rent->pay_amount = $request->pay_amount;
+        $rentpayamount = ($rent->pay_amount == null)? 0 : $rent->pay_amount; 
+        
+        $rent->pay_amount =  $rentpayamount + $request->pay_amount;
         $rent->pay_date = date('Y-m-d');
-        $rent->status = 'paid';
+        
+        if($request->pay_amount < ($rent->total_amount - $rentpayamount) ){
+            $rent->status = 'partially_paid';
+        }else{
+            $rent->status = 'paid';
+        }
+        $rent->description = $request->description;
         $result = $rent->save();
 
         if($result){
@@ -90,7 +98,9 @@ class RentController extends Controller
         $rent = Rent::select('tenants.*', 'area.*', 'rent.*', 'area.id as a_id', 'area.name as a_name', 'rent.rent as r_rent', 'rent.maintenance as r_maintenance', 'rent.status as r_status','rent.id as r_id')->join('area', 'rent.a_id', '=', 'area.id')->join('tenants', 'rent.t_id', '=', 'tenants.id')->where('rent.id',$id)->orderBy('rent.status', 'desc')->orderBy('tenants.id', 'asc')->orderBy('rent.id', 'desc')->first();
 
         $company = Company::find(1);
-        $url = env('APP_URL') . '/uploads/tenant/' . $rent->photo;
+        // $url = env('APP_URL') . '/uploads/tenant/' . $rent->photo;
+        // $url = url('/'). '/adminpanel/images/mmlogo.jpg';
+        $url = env('APP_URL') . '/adminpanel/images/mmlogo.jpg';
 
         //$url = 'images/V.png';url('/') . 'http://localhost/Tenant_Mall/public'
         $type = pathinfo($url, PATHINFO_EXTENSION);
@@ -102,7 +112,31 @@ class RentController extends Controller
         //   return view('adminpanel.rent.generate-pdf');
         $pdf = PDF::loadView('adminpanel.rent.generate-pdf', $data);
     
-        return $pdf->download('itsolutionstuff.pdf');
+        return $pdf->download('INV_' .$rent->invoice_no . '.pdf');
+    }
+    public function send_invoice($id){
+        $rent = Rent::select('tenants.*', 'area.*', 'rent.*', 'area.id as a_id', 'area.name as a_name', 'rent.rent as r_rent', 'rent.maintenance as r_maintenance', 'rent.status as r_status','rent.id as r_id')->join('area', 'rent.a_id', '=', 'area.id')->join('tenants', 'rent.t_id', '=', 'tenants.id')->where('rent.id',$id)->orderBy('rent.status', 'desc')->orderBy('tenants.id', 'asc')->orderBy('rent.id', 'desc')->first();
+        $company = Company::find(1);
+
+        $url = env('APP_URL') . '/adminpanel/images/mmlogo.jpg';
+        $type = pathinfo($url, PATHINFO_EXTENSION);
+        $data = file_get_contents($url);
+        $url = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+
+        $details = [
+            'title' => 'Mail from ItSolutionStuff.com',
+            'body' => 'This is for testing email using smtp',
+            'url' => $url
+        ];
+       
+        \Mail::to('farazahmed34296@gmail.com')->send(new \App\Mail\MyTestMail($details));
+
+        Alert::success('Congrats', 'Invoice is Successfully Send');
+        return redirect('invoice/'.$id);
+
+     
+
     }
 
     public function invoice($id){

@@ -13,15 +13,18 @@ Rent History
 
 @push('js-link')
 <script>
-    function payInvoice(area_name, tenant_id, tenant_name, amount, months, id){
+    function payInvoice(area_name, tenant_id, tenant_name, amount, months, id, notes){
 
         $("select[name=month]").html('<option value="">Select Month</option>');
         $("#shopNumber").html(area_name);
         $("input[name=t_id]").val(tenant_id);
         $("input[name=clientName]").val(tenant_name);
+        $("input[name=total_amount]").val('');
+        $("input[name=pay_amount]").val('');
+        $("textarea[name=description]").val('');
        
-        console.log(amount)
-        console.log(months)
+        // console.log(amount)
+        // console.log(months)
         var month_name = ['January' , 'February' , 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October','November','December'];
         var today_month = new Date();
         today_month = today_month.getMonth();
@@ -36,8 +39,9 @@ Rent History
                 }
             }
             // months[i] == '' || 
-            if(months[i].indexOf('Not Paid') != -1){
-                $("select[name=month]").append('<option value="'+(temp+1)+'" data-amount="'+amount[i]+'" data-id="'+id[i]+'">'+month_name[temp]+'</option>')
+            if(months[i].indexOf('Not Paid') != -1 || months[i].indexOf('warning') != -1){
+                $("select[name=month]").append('<option value="'+(temp+1)+'" data-amount="'+amount[i]+'"  data-notes="'+notes[i]+'" data-id="'+id[i]+'">'+month_name[temp]+'</option>')
+                
             }
         }
       
@@ -48,9 +52,11 @@ Rent History
     function onchangeMonth(){
         amount = $("select[name=month]").find(':selected').data('amount');
         id = $("select[name=month]").find(':selected').data('id');
+        notes = $("select[name=month]").find(':selected').data('notes');
         $("input[name=total_amount]").val(amount);
         $("input[name=pay_amount]").val(amount);
         $("input[name=rent_id]").val(id);
+        $("textarea[name=description]").val(notes);
 
     }
 </script>
@@ -121,6 +127,7 @@ Rent History
                                             @php
                                                 $month6 = $month5 = $month4 = $month3 = $month2 = $month1='';
                                                 $total6 = $total5 = $total4 = $total3 = $total2 = $total1='';
+                                                $notes6 = $notes5 = $notes4 = $notes3 = $notes2 = $notes1='';
                                                 $id6 = $id5 = $id4 = $id3 = $id2 = $id1='';
                                                 $temp=0;$test = 'false';
                                                 for($j=0; $j<6; $j++){
@@ -142,28 +149,46 @@ Rent History
                                                    
                                                     if($rents[$i]->start_month == str_replace('0','', date('m', strtotime('-5 month')))){
                                                         $id6 = $rents[$i]->r_id;
-                                                        $total6 = $rents[$i]->total_amount;
-                                                        $month6 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total6 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes6 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month6 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }else if($rents[$i]->start_month == str_replace('0','', date('m', strtotime('-4 month')))){
                                                         $id5 = $rents[$i]->r_id;
-                                                        $total5 = $rents[$i]->total_amount;
-                                                        $month5 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total5 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes5 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month5 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }else if($rents[$i]->start_month == str_replace('0','', date('m', strtotime('-3 month')))){
                                                         $id4= $rents[$i]->r_id;
-                                                        $total4 = $rents[$i]->total_amount;
-                                                        $month4 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total4 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes4 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month4 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }else if($rents[$i]->start_month == str_replace('0','', date('m', strtotime('-2 month')))){
                                                         $id3 = $rents[$i]->r_id;
-                                                        $total3 = $rents[$i]->total_amount;
-                                                        $month3 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total3 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes3 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month3 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }else if($rents[$i]->start_month == str_replace('0','', date('m', strtotime('-1 month')))){
                                                         $id2 = $rents[$i]->r_id;
-                                                        $total2 = $rents[$i]->total_amount;
-                                                        $month2 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total2 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes2 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month2 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }else if($rents[$i]->start_month == str_replace('0','', date('m'))){
                                                         $id1 = $rents[$i]->r_id;
-                                                        $total1 = $rents[$i]->total_amount;
-                                                        $month1 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-success mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
+                                                        $total1 = $rents[$i]->total_amount - $rents[$i]->pay_amount;
+                                                        $st = $rents[$i]->status;
+                                                        $notes1 = $rents[$i]->description;
+                                                        $st = ($st == 'paid' )? 'success' : 'warning';
+                                                        $month1 = ($rents[$i]->status != 'unpaid') ? '<div class="badge bg-'. $st .' mb-1 text-white text-center">$'.$rents[$i]->pay_amount.'</div>' :  '<div class="badge bg-danger mb-1 text-white text-center">Not Paid</div>';
                                                     }
 
                                                 }
@@ -179,7 +204,7 @@ Rent History
                                             <td>
                                                
 
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="payInvoice('{{$rents[$i]->a_name}}','{{$rents[$i]->t_id}}','{{$rents[$i]->first_name}} {{$rents[$i]->last_name}}' ,['{{$total1}}', '{{$total2}}', '{{$total3}}' , '{{$total4}}', '{{$total5}}', '{{$total6}}'],['{{$month1}}', '{{$month2}}', '{{$month3}}' , '{{$month4}}', '{{$month5}}', '{{$month6}}'],['{{$id1}}', '{{$id2}}', '{{$id3}}' , '{{$id4}}', '{{$id5}}', '{{$id6}}'])" >Pay Rent</button>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="payInvoice('{{$rents[$i]->a_name}}','{{$rents[$i]->t_id}}','{{$rents[$i]->first_name}} {{$rents[$i]->last_name}}' ,['{{$total1}}', '{{$total2}}', '{{$total3}}' , '{{$total4}}', '{{$total5}}', '{{$total6}}'],['{{$month1}}', '{{$month2}}', '{{$month3}}' , '{{$month4}}', '{{$month5}}', '{{$month6}}'],['{{$id1}}', '{{$id2}}', '{{$id3}}' , '{{$id4}}', '{{$id5}}', '{{$id6}}'],['{{$notes1}}', '{{$notes2}}', '{{$notes3}}' , '{{$notes4}}', '{{$notes5}}', '{{$notes6}}'])" >Pay Rent</button>
 
                                                 {{-- <a href="{{route('area_delete', ['id' => $area->id ])}}" class="action-icon delete-confirm"> <i class="mdi mdi-delete text-danger"></i></a> --}}
                                             </td>
@@ -258,10 +283,17 @@ Rent History
                                     <input type="text" class="form-control form-control-solid" name="total_amount"  readonly />
                             </div>
 
-                            <div class="fv-row mb-3">
+                            <div class="fv-row mb-3 ">
                                 <label class="required fs-6 fw-bold">Amount Paid</label>
-                                <input type="hidden" class="form-control form-control-solid" name="pay_amount"   />
+                                <input type="text" class="form-control form-control-solid" name="pay_amount"   />
                             </div>
+
+                            <div class="fv-row mb-3 ">
+                                <label class="required fs-6 fw-bold">Notes</label>
+                                <textarea name="description"  class="form-control" rows="3"></textarea>
+                            </div>
+
+
                             
                             
                      

@@ -94,7 +94,8 @@ Invoice List
                                             <th class="min-w-50px">#</th>
                                         <th class="min-w-175px">Client Name / Phone</th>													
                                         <th class="min-w-100px">Shop</th>
-                                        <th class="min-w-75px">Amount</th>
+                                        <th class="min-w-75px">Total Amount</th>
+                                           <th class="min-w-75px">Paid Amount</th>
                                         <th class="min-w-100px">Issue Date</th>
                             
                                         <th class="min-w-100px">Status</th>
@@ -120,6 +121,7 @@ Invoice List
                                             <!--end::Payment method=-->
                                             <!--begin::Date=-->
                                             <td><span class="fw-bolder">${{$rent->total_amount}}</span></td>
+                                             <td><span class="fw-bolder">${{$rent->pay_amount}}</span></td>
                                             <td>{{$rent->generation_date}}</td>
                                             
                                             <td>
@@ -127,11 +129,13 @@ Invoice List
                                                     <div class="badge bg-danger">Un-Paid</div>
                                                 @elseif($rent->status == 'paid')
                                                     <div class="badge bg-success">Paid</div>
+                                                @else
+                                                    <div class="badge bg-warning">Partially Paid</div>
                                                 @endif
                                             </td>
                                             
                                             <td>
-                                            @if($rent->status == 'unpaid') <button type="button" class="btn btn-primary btn-sm" onclick="payRent('{{$rent->r_id}}', '{{$rent->total_amount}}')">Pay Rent</button> @endif
+                                            {{-- @if($rent->status == 'unpaid') <button type="button" class="btn btn-primary btn-sm" onclick="payRent('{{$rent->r_id}}', '{{$rent->total_amount}}')">Pay Rent</button> @endif --}}
                                             <a href="{{url('/invoice')}}/{{$rent->r_id}}"><button type="button" class="btn btn-success btn-sm" onclick="" >Generate Invoice</button></a> 
 
                                                     {{-- <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-square-edit-outline"></i></a>

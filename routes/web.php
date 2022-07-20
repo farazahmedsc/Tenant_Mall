@@ -72,6 +72,7 @@ Route::middleware(['userAuthentication','adminAuthentication'])->group(function 
 
       Route::get('/invoice_list', [RentController::class, 'invoice_list'])->withoutmiddleware('adminAuthentication');
       Route::get('/generate_pdf/{id}', [RentController::class, 'generate_pdf'])->name('generate_pdf')->withoutmiddleware('adminAuthentication');
+      Route::get('/send_invoice/{id}', [RentController::class, 'send_invoice'])->name('send_invoice')->withoutmiddleware('adminAuthentication');
       Route::get('/invoice/{id}', [RentController::class, 'invoice'])->withoutmiddleware('adminAuthentication');
 });
 
@@ -88,6 +89,8 @@ Route::middleware(['userAuthentication','adminAuthentication'])->group(function 
     Route::post('/tenant/update/{id}', [TenantController::class, 'update']);
 
     Route::post('/expense_category_store', [ExpenseCategoryController::class, 'store'])->withoutmiddleware('adminAuthentication');
+    Route::post('/expense_category_store_from_expense', [ExpenseCategoryController::class, 'store_from_expense'])->withoutmiddleware('adminAuthentication');
+    
     Route::post('/expense_category/update/{id}', [ExpenseCategoryController::class, 'update'])->withoutmiddleware('adminAuthentication');
 
     Route::post('/expense_store', [ExpenseController::class, 'store'])->withoutmiddleware('adminAuthentication');
@@ -105,6 +108,18 @@ Route::middleware(['userAuthentication','adminAuthentication'])->group(function 
     Route::post('/pay_rent2', [RentController::class, 'pay_rent2'])->withoutmiddleware('adminAuthentication');
 
     
+});
+
+Route::get('send-mail', function () {
+   
+    $details = [
+        'title' => 'Mail from ItSolutionStuff.com',
+        'body' => 'This is for testing email using smtp'
+    ];
+   
+    \Mail::to('farazahmed34296@gmail.com')->send(new \App\Mail\MyTestMail($details));
+   
+    dd("Email is Sent.");
 });
 
 Route::get('/test', function(){

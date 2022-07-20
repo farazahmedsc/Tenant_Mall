@@ -75,9 +75,10 @@
                                 <thead class="table-light">
                                     <tr>  
                                         <th>Id</th>                                                      
-                                        <th>Name</th>
-                                        <th>Dimension</th>
-                                        <th>Type</th>														
+                                        <th>Shop#</th>
+                                        <th>N/A</th>
+                                        <th>Type</th>	
+                                        <th>Alloted</th>													
                                         <th>Added On</th>
                                         <th>Status</th>
                                         <th style="width: 82px;">Action</th>
@@ -98,6 +99,15 @@
                                                 @endphp
                                                 <div class="badge badge-soft-{{($area->type == 'Shop')? "primary" : "warning"}}">{{$area->type}}</div>
                                             </td>
+                                            <td>
+                                                @if ($area->alloted == '1')
+                                                    <div class="badge badge-soft-success">Alloted</div>
+                                                @else
+                                                <div class="badge badge-soft-danger">Empty</div>
+                                                @endif
+                                               
+                                            </td>
+
                                             <td>{{date('F d,Y', strtotime($area->created_at))}}</td>
                                             <td>
                                                 <div class="badge badge-soft-{{($area->is_active == 1)? "success" : "danger"}}">{{($area->is_active == 1)? "Active" : "Inactive"}}</div>

@@ -87,15 +87,19 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control form-control-solid" value="{{$tenant->email}}">
+                            </div>
+                            <div class="form-group col-md-6 mb-3">
                                 <label>Area Alloted</label>
                                 <select name="area_alloted" class="form-control form-select form-select-solid" >
                                     <option value="">Select</option>
                                     @foreach ($areas as $area)
-                                        @if(!in_array($area->id, $occupied_area))
+                                        {{-- @if(!in_array($area->a_id, $occupied_area)) --}}
                                            
                                       
                                         <option value="{{$area->id}}" {{($tenant->area_alloted == $area->id && str_contains($label, 'Update'))? "Selected" : "" ;}}>{{$area->name}}</option>
-                                        @endif
+                                        {{-- @endif --}}
                                     @endforeach
                                   
                                 </select>
@@ -129,7 +133,7 @@
 
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
-                                <label class="form-label">Photo of Tenant</label>
+                                <label>Photo of Tenant</label>
                                 <input type="file" name="photo" class="form-control">                                 
                             </div>
 
@@ -140,7 +144,51 @@
                                     <option value="0" {{($tenant->is_active == 0)? 'Selected' : '';}}>Inactive</option>
                                 </select>                                   
                             </div>
+
+                       
                         </div>
+                            <hr>
+                        <div class="row">
+                            <div class="form-group col-md-6 mb-3">
+                                <label>Upload Driver License/ID Card</label>
+                                <input type="file" name="license" class="form-control">                                 
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3">
+                                <label>Upload business Registration Document</label>
+                                <input type="file" name="registration" class="form-control">                                 
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3">
+                                <label>Upload Insurance</label>
+                                <input type="file" name="insurance" class="form-control">                                 
+                            </div>
+
+                            <div class="form-group col-md-6 mb-3">
+                                <label>Upload The Lease</label>
+                                <input type="file" name="lease" class="form-control">                                 
+                            </div>
+
+                        </div>
+
+                        @if ($label == "Update Tenant" )
+
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <b>Driver License/ID Card: </b> <a href="{{url('/')}}/uploads/tenant/{{$tenant->license}}" target="_blank">{{str_replace($tenant->first_name."_", "",$tenant->license)}}</a> <br>
+                                    <b>business Registration Document: </b> <a href="{{url('/')}}/uploads/tenant/{{$tenant->registration}}" target="_blank">{{str_replace($tenant->first_name."_", "",$tenant->registration)}}</a> <br>
+                                    <b>Insurance: </b> <a href="{{url('/')}}/uploads/tenant/{{$tenant->insurance}}" target="_blank">{{str_replace($tenant->first_name."_", "",$tenant->insurance)}}</a> <br>
+                                    <b>The Lease: </b> <a href="{{url('/')}}/uploads/tenant/{{$tenant->lease}}" target="_blank">{{str_replace($tenant->first_name."_", "",$tenant->lease)}}</a> <br>
+
+                                
+                                
+                                
+                                </div>
+                            </div>    
+
+                            
+                        @endif
 
 
                         <div class="row mt-3">

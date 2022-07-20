@@ -8,7 +8,7 @@ Invoice
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.2.0/jspdf.umd.min.js"></script> --}}
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 
@@ -57,13 +57,14 @@ doc.save('div.pdf');
                                     <div class="d-flex flex-stack pb-10">
                                         <!--begin::Logo-->
                                         <a href="#" class="mb-1">
-                                        <img src="{{url('/')}}/uploads/tenant/{{$rent->photo}}" height="50" alt="image">
+                                        {{-- <img src="{{url('/')}}/uploads/tenant/{{$rent->photo}}" height="50" alt="image"> --}}
+                                        <img src="{{url('/')}}/adminpanel/images/mmlogo.jpg" height="80" alt="image">
                                         </a>
                                         <!--end::Logo-->
                                         <!--begin::Action-->
                                         <div class="ms-auto">
                                         <a href="{{route("generate_pdf",['id'=>$rent->r_id])}}" class="btn btn-sm btn-primary">Download as pdf</a>
-                                        <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_add_customer">Send</a>
+                                        <a href="{{route("send_invoice",['id'=>$rent->r_id])}}" class="btn btn-sm btn-success">Send</a>
                                         </div>
                                         <!--end::Action-->
                                     </div>

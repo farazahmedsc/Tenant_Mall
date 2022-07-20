@@ -96,7 +96,9 @@ Tenants
                                     <td><img src="{{url('/')}}/uploads/tenant/{{(is_null($tenant->photo))? 'avatar.jpg' : $tenant->photo}}" alt="Tenant Photo" class="img-table"></td>
                                     <td>
                                     <a href="{{ route('tenant_edit', ['id' => $tenant->id]) }}" class="text-gray-800 text-hover-primary mb-1">{{$tenant->first_name}} {{$tenant->last_name}}</a><br>
-                                        <span class="fw-bolder text-dark">{{$tenant->phone_number}} </span></td>
+                                        <span class="fw-bolder text-dark">{{$tenant->phone_number}} </span> <br>
+                                        <span class="fw-bolder text-dark">{{$tenant->email}} </span>
+                                    </td>
                                     <td>{{$tenant->business_name}}</td>
                                     <td>{{$tenant->rent}}</td>
                                     <td>{{$tenant->maintenance}}</td>
