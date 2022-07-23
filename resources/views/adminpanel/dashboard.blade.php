@@ -342,7 +342,7 @@
             </div>
             <!-- end col-->
 
-            <div class="col-xl-6 col-lg-6">
+            <div class="col-xl-6">
                 <div class="card">
                     <div class="card-body">
                         {{-- <div class="dropdown float-end">

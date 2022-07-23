@@ -44,9 +44,9 @@ Shops
                                 <span class="badge badge-soft-secondary me-auto font-12 p-1 mt-2">#{{$frontshop->a_id}}</span>
                             </div> <!-- end dropdown -->
                             <!-- Title-->
-                            <div class="rounded-circle avatar-md">
+                            {{-- <div class="rounded-circle avatar-md">
                                 <img src="{{url('/')}}/uploads/tenant/{{(is_null($frontshop->photo))? 'avatar.jpg' : $frontshop->photo}}" alt="Tenant" class="rounded-circle avatar-md" />
-                            </div>
+                            </div> --}}
                             <!--begin::Avatar-->
 
 
@@ -128,9 +128,9 @@ Shops
                             <span class="badge badge-soft-secondary me-auto font-12 p-1 mt-2">#{{$centershop->a_id}}</span>
                         </div> <!-- end dropdown -->
                         <!-- Title-->
-                        <div class="rounded-circle avatar-md">
+                        {{-- <div class="rounded-circle avatar-md">
                             <img src="{{url('/')}}/uploads/tenant/{{(is_null($centershop->photo))? 'avatar.jpg' : $centershop->photo}}" alt="Tenant" class="rounded-circle avatar-md" />
-                        </div>
+                        </div> --}}
                         <!--begin::Avatar-->
 
 

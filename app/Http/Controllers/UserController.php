@@ -27,11 +27,14 @@ class UserController extends Controller
         $total_rent = Rent::where('status','=','paid')->sum('total_amount');
         $total_expense = Expense::where('is_active','1')->sum('amount');
         $total_user = User::where('is_active','1')->get()->count();
+        // ->orWhere('status', '=', 'partially_paid')
+        $month_rent = Rent::whereMonth('generation_date', date('m'))->sum('total_amount');
+        $rent_collected = Rent::where('status','partially_paid')->orWhere('status','paid')->whereMonth('generation_date', date('m'))->sum('pay_amount');
+        $total_rent_remaining = Rent::where('status','=','unpaid')->whereMonth('generation_date', date('m'))->sum('total_amount');
+        $pay_rent_remaining = Rent::where('status','=','unpaid')->whereMonth('generation_date', date('m'))->sum('pay_amount');
 
-        $month_rent = Rent::whereMonth('pay_date', date('m'))->sum('pay_amount');
-        $rent_collected = Rent::where('status','=','paid')->whereMonth('pay_date', date('m'))->sum('pay_amount');
-        $rent_remaining = Rent::where('status','=','unpaid')->whereMonth('pay_date', date('m'))->sum('pay_amount');
-        $rent_percent =number_format( ($rent_collected * 100)/$month_rent ,1);
+        $rent_remaining = $total_rent_remaining - $pay_rent_remaining;
+        $rent_percent = ($month_rent != 0) ? number_format( ($rent_collected * 100)/$month_rent ,1): 0;
         
         $recent_payments = Rent::select('rent.*', 'tenants.*', 'area.*', 'area.name as a_name')->join('tenants', 'rent.t_id','=','tenants.id')->join('area','rent.a_id','=','area.id')->where('rent.status','paid')->orderBy('rent.id','desc')->limit(5)->get();
         $unpaid_payments = Rent::select('rent.*', 'tenants.*', 'area.*', 'area.name as a_name')->join('tenants', 'rent.t_id','=','tenants.id')->join('area','rent.a_id','=','area.id')->where('rent.status','unpaid')->orderBy('rent.id','desc')->limit(5)->get();
@@ -63,25 +66,28 @@ class UserController extends Controller
         $count_revenue = $count_expense = 0;
             for ($i=1; $i <=12 ; $i++) { 
                 $temp = 0;
-
-                if($revenues_monthly[$count_revenue]['month'] == $i && $revenues_monthly[$count_revenue]['year'] == date('Y')){
-                    $temp = $revenues_monthly[$count_revenue]['price'];
-                    if($count_revenue < count($revenues_monthly)-1){
-                        $count_revenue++;
-                    }                
+                if(!empty($revenues_monthly)){
+                    if($revenues_monthly[$count_revenue]['month'] == $i && $revenues_monthly[$count_revenue]['year'] == date('Y')){
+                        $temp = $revenues_monthly[$count_revenue]['price'];
+                        if($count_revenue < count($revenues_monthly)-1){
+                            $count_revenue++;
+                        }                
+                    }
+    
                 }
-
+               
                 array_push($revenues,$temp);
 
 
 
                 $tempExpense =0;
-                
-                if($expenses_monthly[$count_expense]['month'] == $i && $expenses_monthly[$count_expense]['year'] == date('Y')){
-                    $tempExpense = $expenses_monthly[$count_expense]['price'];
-                    if($count_expense < count($expenses_monthly)-1){
-                        $count_expense++;
-                    }                
+                if(!empty($expenses_monthly)){
+                    if($expenses_monthly[$count_expense]['month'] == $i && $expenses_monthly[$count_expense]['year'] == date('Y')){
+                        $tempExpense = $expenses_monthly[$count_expense]['price'];
+                        if($count_expense < count($expenses_monthly)-1){
+                            $count_expense++;
+                        }                
+                    }
                 }
 
                 array_push($expenses,$tempExpense);

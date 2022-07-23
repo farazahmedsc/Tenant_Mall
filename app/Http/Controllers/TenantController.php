@@ -54,20 +54,18 @@ class TenantController extends Controller
         $request->validate(
             [
                 'first_name' => 'required',
-                'last_name' => 'required',
-                'phone_number' => 'required',
-                'rent' => 'required',
-                'maintenance' => 'required'                
+                'rent' => 'required'
+             
             ]
         );
-
+        $license = $registration = $insurance = $lease = null;
         if($request->hasFile('photo')){  
             $file = rand(10,99) . $request->file('photo')->getClientOriginalName() ;
             $request->file('photo')->move(public_path('uploads/tenant'), $file);    
         }else{
             $file = 'avatar.jpg';
         }
-
+       
         if($request->hasFile('license')){  
             $license = $request['first_name'] . '_' . $request->file('license')->getClientOriginalName() ;
             $request->file('license')->move(public_path('uploads/tenant'), $license);  
@@ -101,7 +99,7 @@ class TenantController extends Controller
         $tenant->area_alloted = $request['area_alloted'];
         $tenant->acquiring_date = $request['acquiring_date'];
         $tenant->rent = $request['rent'];
-        $tenant->maintenance = $request['maintenance'];
+        $tenant->maintenance = $request['maintenance'] ?? 0;
         $tenant->photo = $file;
         $tenant->license = $license;
         $tenant->registration = $registration;
@@ -113,13 +111,13 @@ class TenantController extends Controller
         $tenant = Tenants::orderBy('created_at', 'desc')->first();
 
         $last_rent = Rent::orderBy('created_at', 'desc')->first();
-
+        
         $rent = new Rent();
-        $rent->invoice_no = $last_rent->invoice_no +1;
+        $rent->invoice_no = (empty($last_rent)) ? '001' : $last_rent->invoice_no +1;
         $rent->t_id = $tenant->id;//['t_id'];
         $rent->a_id = $tenant->area_alloted;//['a_id'];
         $rent->rent = $tenant->rent;
-        $rent->maintenance = $tenant->maintenance;
+        $rent->maintenance = $tenant->maintenance ;
         $rent->total_amount = $tenant->rent + $tenant->maintenance;
         $rent->generation_date = $tenant->acquiring_date;//date('Y-m-d');
         $rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($tenant->acquiring_date)));
@@ -167,10 +165,7 @@ class TenantController extends Controller
         $request->validate(
             [
                 'first_name' => 'required',
-                'last_name' => 'required',
-                'phone_number' => 'required',
-                'rent' => 'required',
-                'maintenance' => 'required'                
+                'rent' => 'required'               
             ]
         );
         // echo $request['area_alloted']; die;

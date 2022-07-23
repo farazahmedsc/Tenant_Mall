@@ -123,8 +123,11 @@ doc.save('div.pdf');
                                                 <!--end::Text-->
                                                 <!--end::Description-->
                                                 <div class="fw-bold fs-7 text-gray-600">{{$company->street}} {{$company->apt}} 
-                                                <br>{{$company->city}} {{$company->state}} {{$company->zip}} </div>
-                                                <!--end::Description-->
+                                                <br>{{$company->city}} {{$company->zip}} 
+                                                <br>
+                                                {{$company->phone_number}}
+                                                <br>{{$company->email}}</div>
+                                                 <!--end::Description-->
                                             </div>
                                             <!--end::Col-->
                                         </div>

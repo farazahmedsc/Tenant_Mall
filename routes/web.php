@@ -106,7 +106,9 @@ Route::middleware(['userAuthentication','adminAuthentication'])->group(function 
     Route::post('/pay_rent', [RentController::class, 'pay_rent'])->withoutmiddleware('adminAuthentication');
 
     Route::post('/pay_rent2', [RentController::class, 'pay_rent2'])->withoutmiddleware('adminAuthentication');
+    Route::post('/store_new_rent', [RentController::class, 'store_new_rent'])->withoutmiddleware('adminAuthentication');
 
+    
     
 });
 

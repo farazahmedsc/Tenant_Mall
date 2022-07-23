@@ -264,7 +264,7 @@
             
                 <!-- LOGO -->
                 <div class="logo-box">
-                    <a href="index.html" class="logo logo-dark text-center">
+                    <a href="{{url('/')}}" class="logo logo-dark text-center">
                         <span class="logo-sm">
                             <img src="{{url('/')}}/adminpanel/images/logo-light.png" alt="" height="55">
                             <!-- <span class="logo-lg-text-light">UBold</span> -->
@@ -275,7 +275,7 @@
                         </span>
                     </a>
             
-                    <a href="index.html" class="logo logo-light text-center">
+                    <a href="{{url('/')}}" class="logo logo-light text-center">
                         <span class="logo-sm">
                             <img src="{{url('/')}}/adminpanel/images/logo-light.png" alt="" height="55">
                         </span>

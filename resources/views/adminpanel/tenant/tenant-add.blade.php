@@ -60,8 +60,8 @@
                                 </span>
                             </div>
                             <div class="form-group col-md-6 mb-3">
-                                <label>Last Name <sup class="text-danger">*</sup></label>
-                                <input type="text" name="last_name" class="form-control form-control-solid" value="{{$tenant->last_name}}" required>
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" class="form-control form-control-solid" value="{{$tenant->last_name}}">
                                 <span class="text-danger">
                                     @error('last_name')
                                         {{$message}}
@@ -71,8 +71,8 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-md-6 mb-3">
-                                <label>Phone/Mobile <sup class="text-danger">*</sup></label>
-                                <input type="text" name="phone_number" class="form-control form-control-solid" value="{{$tenant->phone_number}}" required>
+                                <label>Phone/Mobile </label>
+                                <input type="text" name="phone_number" class="form-control form-control-solid" value="{{$tenant->phone_number}}" >
                                 <span class="text-danger">
                                     @error('phone_number')
                                         {{$message}}
@@ -91,8 +91,8 @@
                                 <input type="email" name="email" class="form-control form-control-solid" value="{{$tenant->email}}">
                             </div>
                             <div class="form-group col-md-6 mb-3">
-                                <label>Area Alloted</label>
-                                <select name="area_alloted" class="form-control form-select form-select-solid" >
+                                <label>Area Alloted<sup class="text-danger">*</sup></label>
+                                <select name="area_alloted" class="form-control form-select form-select-solid" required >
                                     <option value="">Select</option>
                                     @foreach ($areas as $area)
                                         {{-- @if(!in_array($area->a_id, $occupied_area)) --}}
@@ -118,8 +118,8 @@
                                 </span>
                             </div>
                             <div class="form-group col-md-6 mb-3">
-                                <label>Maintenance Amount <sup class="text-danger">*</sup></label>
-                                <input type="number" name="maintenance" value="{{$tenant->maintenance}}" class="form-control form-control-solid" required>
+                                <label>Maintenance Amount </label>
+                                <input type="number" name="maintenance" value="{{$tenant->maintenance}}" class="form-control form-control-solid">
                                 <span class="text-danger">
                                     @error('maintenance')
                                         {{$message}}
@@ -132,7 +132,7 @@
                         
 
                         <div class="row">
-                            <div class="form-group col-md-6 mb-3">
+                            <div class="form-group col-md-6 mb-3 d-none" >
                                 <label>Photo of Tenant</label>
                                 <input type="file" name="photo" class="form-control">                                 
                             </div>

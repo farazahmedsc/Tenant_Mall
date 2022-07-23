@@ -54,7 +54,7 @@
                                                 <div class="fw-bold fs-7 text-gray-600" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif'; font-size: 14px!important; margin-bottom: 6px;line-height:17px;">Issue Date:</div>
                                                 <!--end::Label-->
                                                 <!--end::Col-->
-                                                <div class="" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif';font-weight:100; font-size: 12px!important;line-height:18px;">12 Dec 2021</div>
+                                                <div class="" style="color: rgb(108, 117, 125); font-family: 'Nunito, sans-serif';font-weight:100; font-size: 12px!important;line-height:18px;">{{date('d M Y')}}</div>
                                                 <!--end::Col-->
                                             </div>
                                                 </td></tr>

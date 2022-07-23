@@ -59,6 +59,21 @@ Rent History
         $("textarea[name=description]").val(notes);
 
     }
+    function markNewRent(){
+        $("#markNewRent_modal").modal('show');
+    }
+    function tenantId(e){
+  
+        var area = $("select[name=tenant_id]").find(':selected').data('area');
+        var rent = $("select[name=tenant_id]").find(':selected').data('rent');
+        var maintenance = $("select[name=tenant_id]").find(':selected').data('maintenance');
+        var acquiringdate = $("select[name=tenant_id]").find(':selected').data('acquiringdate');
+    
+        $("input[name=r_area_alloted]").val(area);
+        $("input[name=r_rent]").val(rent);
+        $("input[name=r_maintenance]").val(maintenance);
+        $("input[name=r_acquiring_date]").val(acquiringdate);
+    }
 </script>
 @endpush
 
@@ -70,7 +85,7 @@ Rent History
         
         <!-- start page title -->
         <div class="row">
-            <div class="col-12">
+            <div class="col-qw">
                 <div class="page-title-box">
                     <div class="page-title-right">
                         
@@ -78,6 +93,7 @@ Rent History
                     <h4 class="page-title">Rent History</h4>
                 </div>
             </div>
+            
         </div>     
         <!-- end page title --> 
 
@@ -93,9 +109,11 @@ Rent History
                                 </form>                          
                             </div>
                             <div class="col-md-6">
-                                {{-- <div class="text-md-end">
-                                    <button type="button" class="btn btn-primary waves-effect waves-light mb-2 me-2" data-bs-toggle="modal" data-bs-target="#centermodal">Generate Invoice</button>
-                                </div> --}}
+                                <div class="text-md-end">
+                                    <a href="javascript:;" onclick="markNewRent()"
+                                        class="btn btn-primary waves-effect waves-light mb-2 me-2"><i
+                                            class="mdi mdi-basket me-1"></i>Mark New Rent</a>
+                                </div>
                             </div><!-- end col-->
                         </div>
 
@@ -309,6 +327,94 @@ Rent History
                         <!--begin::Button-->
                         <button type="submit" id="kt_modal_add_customer_submit" class="btn btn-primary">
                             <span class="indicator-label">Pay</span>
+                            
+                        </button>
+                        <!--end::Button-->
+                    </div>
+                    <!--end::Modal footer-->
+                </form>
+                <!--end::Form-->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="markNewRent_modal" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Form-->
+                <form class="form" action="{{url('/store_new_rent')}}" method="POST" id="kt_modal_add_customer_form" >
+                   @csrf
+                    <!--begin::Modal header-->
+                    <div class="modal-header">
+                            <h4 class="modal-title" id="myCenterModalLabel">Mark New Rent </h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    <!--end::Modal header-->
+                    <!--begin::Modal body-->
+                    <div class="modal-body py-10 px-lg-17">
+                        <!--begin::Scroll-->
+                        <div class="scroll-y me-n7 pe-7" id="kt_modal_add_customer_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_customer_header" data-kt-scroll-wrappers="#kt_modal_add_customer_scroll" data-kt-scroll-offset="300px">
+                            <!--begin::Input group-->
+                            <div class="fv-row mb-3">
+                        <label class="required fs-6 fw-bold">Client Name</label>                       
+                    
+                         <select name="tenant_id" class="form-control form-select form-select-solid" required onchange="tenantId(this.value)">
+                            <option value="">Select Client</option>
+                            @foreach ($tenants as $tenant)
+                                <option value="{{$tenant->id}}" data-area="{{$tenant->area_alloted}}" data-rent="{{$tenant->rent}}" data-maintenance="{{$tenant->maintenance}}" data-acquiringdate="{{$tenant->acquiring_date}}"  >{{$tenant->first_name}} {{$tenant->last_name}}</option>
+                                
+                            @endforeach
+                            
+                        </select>
+                    </div>
+                    
+                    <div class="fv-row mb-3">
+                        <label class="required fs-6 fw-bold">Month</label>
+                        {{-- form-select form-select-solid --}}
+                        <select name="r_month" class="form-control" onchange="onchangeMonth()" required>
+                            <option value="">Select Month</option>
+                            <option value="01">January</option>
+                            <option value="02">February</option>
+                            <option value="03">March</option>
+                            <option value="04">April</option>
+                            <option value="05">May</option>
+                            <option value="06">June</option>
+                            <option value="07">July</option>
+                            <option value="08">August</option>
+                            <option value="09">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        {{-- <input type="date" class="form-control form-control-solid" name="name" value="2021-12-12" disabled readonly/> --}}
+                    </div>
+                    
+
+                    <div class="fv-row mb-3 ">
+                        <label class="required fs-6 fw-bold">Notes</label>
+                        <textarea name="r_description"  class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="d-none">
+                        <input type="text" name="r_area_alloted" >
+                        <input type="text" name="r_rent" >
+                        <input type="text" name="r_maintenance" >
+                        <input type="text" name="r_acquiring_date" >
+                    </div>
+                        </div>
+                        <!--end::Scroll-->
+                    </div>
+                    <!--end::Modal body-->
+                    <!--begin::Modal footer-->
+                    <div class="modal-footer flex-center">
+                        <!--begin::Button-->
+                        <button type="reset" id="kt_modal_add_customer_cancel" class="btn btn-white me-3">Discard</button>
+                        <!--end::Button-->
+                        <!--begin::Button-->
+                        <button type="submit" id="kt_modal_add_customer_submit" class="btn btn-primary">
+                            <span class="indicator-label">Submit</span>
                             
                         </button>
                         <!--end::Button-->

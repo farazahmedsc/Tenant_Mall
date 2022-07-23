@@ -78,7 +78,7 @@ Tenants
                         <table class="table table-centered table-nowrap table-borderless table-hover mb-0">
                             <thead class="table-light">
                                 <tr>    
-                                    <th>Photo</th>                          
+                                    {{-- <th>Photo</th>--}}
                                     <th>Full Name / Phone</th>
                                     <th>Business name</th>
                                     <th>Monthly Rent</th>
@@ -93,7 +93,7 @@ Tenants
                                
                                 @foreach ($tenants as $tenant)
                                 <tr>
-                                    <td><img src="{{url('/')}}/uploads/tenant/{{(is_null($tenant->photo))? 'avatar.jpg' : $tenant->photo}}" alt="Tenant Photo" class="img-table"></td>
+                                    {{-- <td><img src="{{url('/')}}/uploads/tenant/{{(is_null($tenant->photo))? 'avatar.jpg' : $tenant->photo}}" alt="Tenant Photo" class="img-table"></td> --}}
                                     <td>
                                     <a href="{{ route('tenant_edit', ['id' => $tenant->id]) }}" class="text-gray-800 text-hover-primary mb-1">{{$tenant->first_name}} {{$tenant->last_name}}</a><br>
                                         <span class="fw-bolder text-dark">{{$tenant->phone_number}} </span> <br>

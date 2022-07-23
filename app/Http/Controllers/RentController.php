@@ -26,15 +26,17 @@ class RentController extends Controller
 
         $rents = DB::select('SELECT tenants.*, area.*, rent.*, area.id as a_id, area.name as a_name, rent.rent as r_rent, rent.maintenance as r_maintenance, rent.status as r_status,rent.id as r_id , MONTH(rent.generation_date) as start_month from rent inner join area on rent.a_id=area.id inner join tenants on rent.t_id=tenants.id where rent.created_at >='.date('Y-m', strtotime('-5 month')) . ' ORDER BY tenants.id,rent.created_at ');
 
+        $tenants = Tenants::where('is_active', '1')->get();
+
         // $rents = DB::table('rent')   
         // ->selectRaw('SELECT tenants.*, area.*, rent.*, area.id as a_id, area.name as a_name, rent.rent as r_rent, rent.maintenance as r_maintenance, rent.status as r_status, MONTH(rent.generation_date) as start_month from rent inner join area on rent.a_id=area.id inner join tenants on rent.t_id=tenants.id')
         // ->whereRaw('rent.created_at >='.date('Y-m', strtotime('-5 month')))
         // // ->orderByRaw(' tenants.id,rent.created_at')
         // ->paginate(1);
 
-        // echo "<pre>"; print_r($rents); die;
+        // echo "<pre>"; print_r($tenants); die;
         // $rents = $this->arrayPaginator($rents, $request);
-        $data = compact('rents');
+        $data = compact('rents','tenants');
         return view('adminpanel.rent.rent-history')->with($data);
     }
 
@@ -118,19 +120,30 @@ class RentController extends Controller
         $rent = Rent::select('tenants.*', 'area.*', 'rent.*', 'area.id as a_id', 'area.name as a_name', 'rent.rent as r_rent', 'rent.maintenance as r_maintenance', 'rent.status as r_status','rent.id as r_id')->join('area', 'rent.a_id', '=', 'area.id')->join('tenants', 'rent.t_id', '=', 'tenants.id')->where('rent.id',$id)->orderBy('rent.status', 'desc')->orderBy('tenants.id', 'asc')->orderBy('rent.id', 'desc')->first();
         $company = Company::find(1);
 
-        $url = env('APP_URL') . '/adminpanel/images/mmlogo.jpg';
-        $type = pathinfo($url, PATHINFO_EXTENSION);
-        $data = file_get_contents($url);
-        $url = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
+        // $url = env('APP_URL') . '/adminpanel/images/mmlogo.jpg';
+        // $type = pathinfo($url, PATHINFO_EXTENSION);
+        // $data = file_get_contents($url);
+        // $url = 'data:image/' . $type . ';base64,' . base64_encode($data);
+       
 
         $details = [
-            'title' => 'Mail from ItSolutionStuff.com',
-            'body' => 'This is for testing email using smtp',
-            'url' => $url
+            'invoice_no' => $rent->invoice_no,
+            'name' => $rent->first_name . ' ' . $rent->last_name,
+            'area' => $rent->a_name,
+            'company_name' => $company->name,
+            'company_street' => $company->street,
+            'company_apt' => $company->apt,
+            'company_city' => $company->city,
+            'company_zip' => $company->zip,
+            'company_phone_number' => $company->phone_number,
+            'company_email' => $company->email,
+            'generation_month' => date('F', strtotime($rent->generation_date)),
+            'rent' => $rent->rent,
+            'maintenance' => $rent->maintenance,
+            'total_amount' => $rent->total_amount
         ];
        
-        \Mail::to('farazahmed34296@gmail.com')->send(new \App\Mail\MyTestMail($details));
+        \Mail::to($rent->email)->send(new \App\Mail\SendInvoice($details));
 
         Alert::success('Congrats', 'Invoice is Successfully Send');
         return redirect('invoice/'.$id);
@@ -148,7 +161,38 @@ class RentController extends Controller
         return view('adminpanel.rent.invoice')->with($data);
     }
 
+    public function store_new_rent(Request $request){
+        
+        $strtotime = strtotime($request['r_acquiring_date']);
+        $day = date('d', $strtotime);
+        $year = date('Y', $strtotime);
+        $acquiring_date = $day .'-'. $request['r_month'] .'-'. $year;          
+        
+        $acquiring_date = date('Y-m-d', strtotime($acquiring_date));
 
+        $last_rent = Rent::orderBy('created_at', 'desc')->first();
+        
+        $rent = new Rent();
+        $rent->t_id = $request['tenant_id'];//['t_id'];
+        $rent->a_id = $request['r_area_alloted'];//['a_id'];
+        $rent->rent = $request['r_rent'];
+        $rent->maintenance = $request['r_maintenance'];
+        $rent->total_amount = $request['r_rent'] + $request['r_maintenance'];
+        $rent->generation_date = $acquiring_date ;//date('Y-m-d');
+        $rent->next_generation_date = date('Y-m-d', strtotime('+1 month', strtotime($acquiring_date)));
+        $rent->generated = '0';
+        $rent->status = 'unpaid';
+        $rent->description = $request['r_description'];
+        $result = $rent->save();
+
+        if($result){
+            Alert::success('Congrats', 'New Rent is Successfully Marked');
+            return redirect('rent_history');
+        }else{
+            Alert::error('Error', 'New Rent Failed to Marked');
+            return redirect('rent_history');
+        }
+    }
     // public function arrayPaginator($array, $request)
     // {
     //     $page = Input::get('page', 1);
@@ -158,4 +202,6 @@ class RentController extends Controller
     //     return new LengthAwarePaginator(array_slice($array, $offset, $perPage, true), count($array), $perPage, $page,
     //         ['path' => $request->url(), 'query' => $request->query()]);
     // }
+
+    
 }
